@@ -7,7 +7,7 @@ const loginPage = (req, res) => {
 };
 
 const signupPage = (req, res) => {
-  res.render('signUp');
+  res.render('signup');
 };
 
 
