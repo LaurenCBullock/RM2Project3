@@ -39,7 +39,6 @@ const makerPage = (req, res) => {
         }
         return res.render('app', {domos: docs});
     });
-  //res.render('app');
 };
 
 module.exports.makerPage = makerPage;
