@@ -32,7 +32,14 @@ const Domo = models.Domo;
 
 
 const makerPage = (req, res) => {
-  res.render('app');
+    Domo.DomoModel.findByOwner(req.session._id, (err,docs) =>{
+        if(err){
+            console.log(err);
+            return res.ststus(400).json({error: 'An error occured'});
+        }
+        return res.render('app', {domos: docs});
+    });
+  //res.render('app');
 };
 
 module.exports.makerPage = makerPage;
