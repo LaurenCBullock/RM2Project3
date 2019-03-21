@@ -32,7 +32,7 @@ const login = (request, response) => {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
 
-    req.session.sccount = Account.AccountModel.toAPI(account);
+    req.session.account = Account.AccountModel.toAPI(account);
 
     return res.json({ redirect: '/maker' });
   });
