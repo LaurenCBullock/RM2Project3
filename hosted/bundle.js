@@ -5,8 +5,7 @@ var handleError = function handleError(message) {
     $("#errorMessage").text(message);
     $("#domoMessage").animate({ width: 'toggle' }, 350);
 };
-
-var redrect = function redrect(response) {
+var redirect = function redirect(response) {
     $("#domoMessage").animate({ width: 'hide' }, 350);
     window.location = response.redirect;
 };

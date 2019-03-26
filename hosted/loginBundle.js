@@ -18,16 +18,19 @@ var handleLogin = function handleLogin(e) {
 
 var handleSignup = function handleSignup(e) {
     e.preventDefault();
-    $("#domoMessage").animate({ width: 'hide' }, 350);
-    if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
 
+    $("#domoMessage").animate({ width: 'hide' }, 350);
+
+    if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
+
     if ($("#pass").val() !== $("#pass2").val()) {
         handleError("RAWR! Passwords do not match");
         return false;
     }
+
     sendAjax('POST', $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
     return false;
 };
@@ -113,6 +116,7 @@ var setup = function setup(csrf) {
     loginButton.addEventListener("click", function (e) {
         e.preventDefault();
         createLoginWindow(csrf);
+        return false;
     });
     createLoginWindow(csrf);
 };
@@ -132,8 +136,7 @@ var handleError = function handleError(message) {
     $("#errorMessage").text(message);
     $("#domoMessage").animate({ width: 'toggle' }, 350);
 };
-
-var redrect = function redrect(response) {
+var redirect = function redirect(response) {
     $("#domoMessage").animate({ width: 'hide' }, 350);
     window.location = response.redirect;
 };
