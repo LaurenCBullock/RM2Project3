@@ -4,7 +4,7 @@ var handleDomo = function handleDomo(e) {
     e.preventDefault();
 
     $("#domoMessage").animate({ width: 'hide' }, 350);
-    if ($("#domoName").val() == '' || $("domoAge").val() == '') {
+    if ($("#domoName").val() == '' || $("domoAge").val() == '' || $("domoLevel").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
@@ -37,6 +37,12 @@ var DomoForm = function DomoForm(props) {
             "Age: "
         ),
         React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+        React.createElement(
+            "label",
+            { htmlFor: "level" },
+            "Level: "
+        ),
+        React.createElement("input", { id: "domoLevel", type: "text", name: "level", placeholder: "Domo Level" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
     );
@@ -57,7 +63,7 @@ var DomoList = function DomoList(props) {
     var domoNodes = props.domos.map(function (domo) {
         return React.createElement(
             "div",
-            { key: domo._id, className: "domo" },
+            { key: domo._id, id: domo._id, className: "domo" },
             React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
             React.createElement(
                 "h3",
@@ -70,6 +76,17 @@ var DomoList = function DomoList(props) {
                 { className: "domoAge" },
                 "Age: ",
                 domo.age
+            ),
+            React.createElement(
+                "h3",
+                { className: "domoLevel" },
+                "Level: ",
+                domo.level
+            ),
+            React.createElement(
+                "h3",
+                { className: "domoEdit" },
+                " Delete"
             )
         );
     });
@@ -87,9 +104,30 @@ var loadDomosFromServer = function loadDomosFromServer() {
     });
 };
 
+var editDomo = function editDomo(data) {
+    console.log(data);
+
+    sendAjax('POST', '/editDomo', null, function (data) {
+        console.log(data.domoId);
+
+        ReactDOM.render(React.createElement(DomoList, { domos: data.domos }), document.querySelector("#domos"));
+    });
+};
+
 var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
     ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
+
+    //Event bubbling to make edit links trigger Domo Edit mode
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('domoEdit')) {
+            event.preventDefault();
+            //if we get parent element then we know db key
+            //console.log(event.target.parentElement.id);
+            var domoId = event.target.parentElement.id;
+            editDomo(domoId);
+        }
+    }, false);
 
     loadDomosFromServer();
 };

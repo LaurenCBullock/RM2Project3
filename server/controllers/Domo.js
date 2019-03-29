@@ -3,13 +3,14 @@ const Domo = models.Domo;
 
 
 const makeDomo = (req, res) => {
-  if (!req.body.name || !req.body.age) {
+  if (!req.body.name || !req.body.age || !req.body.level) {
     return res.status(400).json({ error: 'RAWR! Both name and age are required' });
   }
 
   const domoData = {
     name: req.body.name,
     age: req.body.age,
+    level: req.body.level,
     owner: req.session.account._id,
   };
 
@@ -39,7 +40,6 @@ const makerPage = (req, res) => {
     return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
   });
 };
-
 const getDomos = (request, response) => {
   const req = request;
   const res = response;
@@ -53,6 +53,24 @@ const getDomos = (request, response) => {
   });
 };
 
+
+const editDomos = (request, response) => {
+    console.log("hello");
+  const req = request;
+  const res = response;
+
+  return Domo.DomoModel.find(key, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured' });
+    }
+      
+    return res.json({ domos: docs });
+  });
+};
+
+
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
+module.exports.editDomos = editDomos;
 module.exports.make = makeDomo;
