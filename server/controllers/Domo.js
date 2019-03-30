@@ -54,23 +54,23 @@ const getDomos = (request, response) => {
 };
 
 
-const editDomos = (request, response) => {
-    console.log("hello");
+const deleteDomos = (request, response) => {
+  /*console.log('hello');
   const req = request;
   const res = response;
 
-  return Domo.DomoModel.find(key, (err, docs) => {
+  return Domo.DomoModel.find(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
-      
-    return res.json({ domos: docs });
-  });
+
+    return res.json({ domos: "test" });
+  });*/
 };
 
 
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
-module.exports.editDomos = editDomos;
+module.exports.deleteDomos = deleteDomos;
 module.exports.make = makeDomo;

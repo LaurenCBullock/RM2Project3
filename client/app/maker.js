@@ -35,6 +35,9 @@ const DomoForm = (props) =>{
     );
 };
 
+
+
+
 const DomoList = function(props){
     if(props.domos.length === 0){
         return(
@@ -50,7 +53,7 @@ const DomoList = function(props){
                 <h3 className="domoName">Name: {domo.name}</h3>
                 <h3 className="domoAge">Age: {domo.age}</h3>
                 <h3 className="domoLevel">Level: {domo.level}</h3>
-                <h3 className="domoEdit"> Delete</h3>
+                <h3 className="domoEdit">Edit</h3>
             </div> 
         );
     });
@@ -61,10 +64,6 @@ const DomoList = function(props){
         </div>
     );
 };
-
-
-
-
 const loadDomosFromServer = () =>{
     sendAjax('GET', '/getDomos', null, (data) =>{
        ReactDOM.render(
@@ -73,42 +72,7 @@ const loadDomosFromServer = () =>{
     });
 };
 
-const editDomo = (data,csrfT) =>{
-    /*console.log(data);
-    
-    sendAjax('DELETE', '/editDomo', null, (data) =>{
-        console.log(data.domoId);*/
-    $.ajax({
-    cache: false,
-    type: "DELETE",
-    url: "/editDomo",
-    data: data,
-    dataType: "json",
-    success: (result, status, xhr) => {
-      $("#domoMessage").animate({width:'hide'},350);
 
-      window.location = result.redirect;
-    },
-    error: (xhr, status, error) => {
-      const messageObj = JSON.parse(xhr.responseText);
-
-      handleError(messageObj.error);
-    }
-  });     
-    
-    
-    /*$.ajax({
-			type: 'Delete',
-			url: '/editDomo',
-			data: data.domoId
-			headers: {
-					"Accept": "application/json; odata=verbose"}
-		})
-        
-      console.log(data.domoId);  
-        
-    });*/
-};
 
 const setup = function(csrf) {
     ReactDOM.render(
@@ -123,9 +87,8 @@ const setup = function(csrf) {
     document.addEventListener('click', function (event) {
     if ( event.target.classList.contains( 'domoEdit' ) ) {
         event.preventDefault();
-        //if we get parent element then we know db key
         let domoId = event.target.parentElement.id;
-        editDomo(domoId,csrf);
+        getEditToken();
         
     }
 }, false);
@@ -133,7 +96,6 @@ const setup = function(csrf) {
     
     loadDomosFromServer();
 };
-
 const getToken = () =>{
     sendAjax('GET', '/getToken', null, (result) =>{
         setup(result.csrfToken);
@@ -143,6 +105,134 @@ const getToken = () =>{
 $(document).ready(function(){
     getToken();
 });
+
+
+
+
+
+
+//Here for reference
+/*$("#domoForm").on("submit", (e) => {
+    e.preventDefault();
+
+    $("#domoMessage").animate({width:'hide'},350);
+
+    if($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoLevel").val() == '') {
+      handleError("RAWR! All fields are required");
+      return false;
+    }
+
+    sendAjax($("#domoForm").attr("action"), $("#domoForm").serialize());
+
+    return false;
+  });*/
+
+const handleEditDomo = (e) => {
+    e.preventDefault();
+    
+    $("#domoMessage").animate({width: 'hide'},350);
+    
+    sendAjax('POST', $("#domoEditForm").attr("action"), $("#domoEditForm").serialize(), function(){
+        loadEditDomosFromServer();
+    });
+    return false;
+};
+
+
+const DomoEditForm = (props) =>{
+    return(
+        <form id="domoEditForm"
+            onSubmit={handleEditDomo}
+            name="domoEditForm"
+            action="/deleteDomo"
+            method="POST"
+            className="domoEditForm"
+        >
+        <input type="hidden" name="_csrf" value={props.csrf}/>
+        </form>
+        
+    );
+};
+
+
+const DomoEditList = function(props){
+    if(props.domos.length === 0){
+        return(
+        <div className="domoEditList">
+            <h3 className="emptyDomo">No Domos to Edit</h3>    
+        </div>
+        );
+    }
+    const domoNodes = props.domos.map(function(domo){
+        return(
+            <div key={domo._id} id={domo._id} className="domo">
+                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace"/>
+                <h3 className="domoName">Name: <input id="domoName" type="text" name="name" placeholder={domo.name}/></h3>
+                <h3 className="domoAge">Age: <input id="domoAge" type="text" name="age" placeholder={domo.age}/></h3>
+                <h3 className="domoLevel">Level: <input id="domoLevel" type="text" name="level" placeholder={domo.level}/></h3>
+                <h3 className="domoDelete" id="domoDelete">DELETE </h3>
+                <h3 className="domoUpdate"id="domoUpdate"> UPDATE</h3>
+            </div> 
+        );
+    });
+    
+    return(
+        <div>
+        <h1 id="editMessage">Select Domo to Edit or Delete</h1>
+        <div className="domoEditList">
+        
+            {domoNodes}
+        </div>
+        </div>
+    );
+};
+
+const loadEditDomosFromServer = () =>{
+    sendAjax('GET', '/getDomos', null, (data) =>{
+       ReactDOM.render(
+        <DomoEditList domos={data.domos}/>, document.querySelector("#domos")
+       );
+    });
+};
+
+
+const setupEdit = function(csrf) {
+    console.log("test");
+    ReactDOM.render(
+        <DomoList domos={[]}/>, document.querySelector("#domos")
+    );
+     ReactDOM.render(
+        <DomoForm csrf={csrf}/>, document.querySelector("#makeDomo")
+    );
+    
+    //Event bubbling to make edit links trigger Domo Edit mode
+    //For now it just deletes the domo
+    document.addEventListener('click', function (event) {
+    if ( event.target.classList.contains( 'domoDelete' ) ) {
+        sendAjax($("#domoEditForm").attr("action"), $("#domoEditForm").serialize());
+        
+    }
+}, false);
+    
+    document.addEventListener('click', function (event) {
+    if ( event.target.classList.contains( 'domoUpdate' ) ) {
+        console.log("clicked");
+        
+    }
+}, false);
+    
+    
+    loadEditDomosFromServer();
+};
+
+//added to test CSRF on new page
+const getEditToken = () =>{
+    console.log("csrf token");
+    sendAjax('GET', '/getToken', null, (result) =>{
+        setupEdit(result.csrfToken);
+    });
+};
+
 
 
 
