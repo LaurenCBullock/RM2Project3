@@ -55,18 +55,17 @@ const getDomos = (request, response) => {
 
 
 const deleteDomos = (request, response) => {
-  /*console.log('hello');
   const req = request;
   const res = response;
 
-  return Domo.DomoModel.find(req.session.account._id, (err, docs) => {
+  return Domo.DomoModel.find(req.body.id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured' });
     }
 
-    return res.json({ domos: "test" });
-  });*/
+    return res.json({ domos: docs });
+  });
 };
 
 

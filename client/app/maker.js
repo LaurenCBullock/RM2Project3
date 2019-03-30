@@ -111,22 +111,6 @@ $(document).ready(function(){
 
 
 
-//Here for reference
-/*$("#domoForm").on("submit", (e) => {
-    e.preventDefault();
-
-    $("#domoMessage").animate({width:'hide'},350);
-
-    if($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoLevel").val() == '') {
-      handleError("RAWR! All fields are required");
-      return false;
-    }
-
-    sendAjax($("#domoForm").attr("action"), $("#domoForm").serialize());
-
-    return false;
-  });*/
-
 const handleEditDomo = (e) => {
     e.preventDefault();
     
@@ -140,11 +124,12 @@ const handleEditDomo = (e) => {
 
 
 const DomoEditForm = (props) =>{
+    //console.dir(props);
     return(
         <form id="domoEditForm"
             onSubmit={handleEditDomo}
             name="domoEditForm"
-            action="/deleteDomo"
+            action="/deleteDomos"
             method="POST"
             className="domoEditForm"
         >
@@ -154,7 +139,34 @@ const DomoEditForm = (props) =>{
     );
 };
 
+const DomoDeleteForm = (props) =>{
+    console.dir(props);
+    return(
+        <form id="domoDeleteForm"
+            onSubmit={handleDeleteDomo}
+            name="domoDeleteForm"
+            action="/deleteDomos"
+            method="POST"
+            className="domoDeleteForm"
+        >
+        <input type="hidden" name="_csrf" value={props.csrf}/>
+        </form>
+        
+    );
+};
 
+const handleDeleteDomo = (e) => {
+    e.preventDefault();
+    
+    $("#domoMessage").animate({width: 'hide'},350);
+    
+    sendAjax('POST', $("#domoDeleteForm").attr("action"), $("#domoDeleteForm").serialize(), function(){
+        loadEditDomosFromServer();
+    });
+    return false;
+};
+
+//displays all domos a user owns and adds inputs, delete and update buttons
 const DomoEditList = function(props){
     if(props.domos.length === 0){
         return(
@@ -186,7 +198,7 @@ const DomoEditList = function(props){
         </div>
     );
 };
-
+//loads the edit screen
 const loadEditDomosFromServer = () =>{
     sendAjax('GET', '/getDomos', null, (data) =>{
        ReactDOM.render(
@@ -195,22 +207,24 @@ const loadEditDomosFromServer = () =>{
     });
 };
 
-
+//sets up edit screen with CSRF tokens and event listeners
 const setupEdit = function(csrf) {
-    console.log("test");
+    //console.log("test");
     ReactDOM.render(
-        <DomoList domos={[]}/>, document.querySelector("#domos")
+        <DomoEditList domos={[]}/>, document.querySelector("#domos")
     );
      ReactDOM.render(
-        <DomoForm csrf={csrf}/>, document.querySelector("#makeDomo")
+        <DomoEditForm csrf={csrf}/>, document.querySelector("#makeDomo")
     );
     
     //Event bubbling to make edit links trigger Domo Edit mode
     //For now it just deletes the domo
     document.addEventListener('click', function (event) {
     if ( event.target.classList.contains( 'domoDelete' ) ) {
-        sendAjax($("#domoEditForm").attr("action"), $("#domoEditForm").serialize());
-        
+    //console.log("sending delete");
+        ReactDOM.render(
+        <DomoDeleteForm csrf={csrf}/>, document.querySelector("#makeDomo")
+    );
     }
 }, false);
     
