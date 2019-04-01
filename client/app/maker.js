@@ -87,7 +87,7 @@ const setup = function(csrf) {
     document.addEventListener('click', function (event) {
     if ( event.target.classList.contains( 'domoEdit' ) ) {
         event.preventDefault();
-        let domoId = event.target.parentElement.id;
+        //let domoId = event.target.parentElement.id;
         getEditToken();
         
     }
@@ -133,34 +133,44 @@ const DomoEditForm = (props) =>{
             method="POST"
             className="domoEditForm"
         >
+        
         <input type="hidden" name="_csrf" value={props.csrf}/>
         </form>
         
     );
 };
 
+let currentId;
+
 const DomoDeleteForm = (props) =>{
-    console.dir(props);
+    console.dir("Domo Delete Form");
     return(
         <form id="domoDeleteForm"
-            onSubmit={handleDeleteDomo}
+            onSubmit={handleDeleteDomo()}
             name="domoDeleteForm"
             action="/deleteDomos"
             method="POST"
             className="domoDeleteForm"
         >
+        <input type="hidden" name="_id" value={currentId}/>
         <input type="hidden" name="_csrf" value={props.csrf}/>
         </form>
         
     );
+    
 };
 
+const FormHandle = (e) =>{
+    
+}
+
 const handleDeleteDomo = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     
     $("#domoMessage").animate({width: 'hide'},350);
-    
+    console.log("handle");
     sendAjax('POST', $("#domoDeleteForm").attr("action"), $("#domoDeleteForm").serialize(), function(){
+        
         loadEditDomosFromServer();
     });
     return false;
@@ -221,10 +231,11 @@ const setupEdit = function(csrf) {
     //For now it just deletes the domo
     document.addEventListener('click', function (event) {
     if ( event.target.classList.contains( 'domoDelete' ) ) {
-    //console.log("sending delete");
+        currentId = event.target.parentElement.id;
         ReactDOM.render(
         <DomoDeleteForm csrf={csrf}/>, document.querySelector("#makeDomo")
     );
+        
     }
 }, false);
     
