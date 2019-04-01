@@ -162,7 +162,7 @@ var DomoDeleteForm = function DomoDeleteForm(props) {
     return React.createElement(
         "form",
         { id: "domoDeleteForm",
-            onSubmit: handleDeleteDomo(),
+
             name: "domoDeleteForm",
             action: "/deleteDomos",
             method: "POST",
@@ -270,6 +270,7 @@ var setupEdit = function setupEdit(csrf) {
         if (event.target.classList.contains('domoDelete')) {
             currentId = event.target.parentElement.id;
             ReactDOM.render(React.createElement(DomoDeleteForm, { csrf: csrf }), document.querySelector("#makeDomo"));
+            handleDeleteDomo();
         }
     }, false);
 

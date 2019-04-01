@@ -146,7 +146,7 @@ const DomoDeleteForm = (props) =>{
     console.dir("Domo Delete Form");
     return(
         <form id="domoDeleteForm"
-            onSubmit={handleDeleteDomo()}
+            
             name="domoDeleteForm"
             action="/deleteDomos"
             method="POST"
@@ -235,7 +235,7 @@ const setupEdit = function(csrf) {
         ReactDOM.render(
         <DomoDeleteForm csrf={csrf}/>, document.querySelector("#makeDomo")
     );
-        
+    handleDeleteDomo();    
     }
 }, false);
     

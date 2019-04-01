@@ -56,8 +56,7 @@ DomoSchema.statics.findByKey = (key, callback) => {
     _id: key,
   };
     //console.log(DomoModel.find(search));
-    console.log(DomoModel)
-    DomoModel.remove({_id: key});
+    console.log(DomoModel);
     return DomoModel.find(search).exec(callback)};
 
 DomoModel = mongoose.model('Domo', DomoSchema);
