@@ -60,11 +60,11 @@ const deleteDomos = (request, response) => {
   const res = response;
     //Domo.DomoModel.
     
-      Domo.DomoModel.deleteOne({"_id":request.body._id});
-      return res.json({ domos: "delete" });
+      Domo.DomoModel.deleteOne({"_id":request.body._id},(err) => {
+    console.dir(err);
+      });
+
 };
-
-
 module.exports.makerPage = makerPage;
 module.exports.getDomos = getDomos;
 module.exports.deleteDomos = deleteDomos;
