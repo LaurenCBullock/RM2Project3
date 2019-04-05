@@ -1,35 +1,38 @@
-const handleDomo = (e) => {
+const handleNote = (e) => {
     e.preventDefault();
     
-    $("#domoMessage").animate({width: 'hide'},350);
-    if($("#domoName").val() == '' || $("domoAge").val() == '' || $("domoLevel").val() == ''){
+    $("#noteMessage").animate({width: 'hide'},350);
+    if($("#noteName").val() == '' || $("noteAge").val() == '' || $("noteLevel").val() == ''){
         handleError("RAWR! All fields are required");
         return false;
     }
     
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function(){
-        loadDomosFromServer();
+    sendAjax('POST', $("#noteForm").attr("action"), $("#noteForm").serialize(), function(){
+        loadNotesFromServer();
     });
     return false;
 };
 
-const DomoForm = (props) =>{
+const NoteForm = (props) =>{
     return(
-        <form id="domoForm"
-            onSubmit={handleDomo}
-            name="domoForm"
+        <form id="noteForm"
+            onSubmit={handleNote}
+            name="noteForm"
             action="/maker"
             method="POST"
-            className="domoForm"
+            className="noteForm"
         >
-        <label htmlFor="name">Name: </label>
-        <input id="domoName" type="text" name="name" placeholder="Domo Name"/>
-        <label htmlFor="age">Age: </label>
-        <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
-        <label htmlFor="level">Level: </label>
-        <input id="domoLevel" type="text" name="level" placeholder="Domo Level"/>
+        <label htmlFor="title">Title: </label>
+        <input id="noteTitle" type="text" name="title" placeholder="Note Title"/>
+        <label htmlFor="desc">Description: </label>
+        <textarea id="noteDesc" type="text" name="desc" placeholder="Note Description"/>
+        <label htmlFor="diffLevel">Difficulty Level: </label>
+        <input id="noteDiffLevel" type="number"  min="0" max="5" name="diffLevel" placeholder="Task difficulty"/>
+        <label htmlFor="dueDate">Due date: </label>
+        <input id="noteDueDate" type="date" name="dueDate" placeholder="Note Description"/>
+        
         <input type="hidden" name="_csrf" value={props.csrf}/>
-        <input className="makeDomoSubmit" type="submit" value="Make Domo"/>
+        <input className="makeNoteSubmit" type="submit" value="Make Note"/>
         </form>
         
     );
@@ -38,36 +41,38 @@ const DomoForm = (props) =>{
 
 
 
-const DomoList = function(props){
-    if(props.domos.length === 0){
+const NoteList = function(props){
+    if(props.notes.length === 0){
         return(
-        <div className="domoList">
-            <h3 className="emptyDomo">No Domos yet</h3>    
+        <div className="noteList">
+            <h3 className="emptyNote">No Notes yet</h3>    
         </div>
         );
     }
-    const domoNodes = props.domos.map(function(domo){
+    const noteNodes = props.notes.map(function(note){
         return(
-            <div key={domo._id} id={domo._id} className="domo">
-                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace"/>
-                <h3 className="domoName">Name: {domo.name}</h3>
-                <h3 className="domoAge">Age: {domo.age}</h3>
-                <h3 className="domoLevel">Level: {domo.level}</h3>
-                <h3 className="domoEdit">Edit</h3>
+            <div key={note._id} id={note._id} className="note">
+                <h3 className="noteEdit">Edit</h3>
+                <h3 className="noteTitle">Title: {note.title}</h3>
+            
+                <h3 className="noteDesc">Description: {note.desc}</h3>
+                <h3 className="noteDiffLevel">Difficulty: {note.diffLevel}</h3>
+                <h3 className="noteDueDate">Due Date: {note.dueDate}</h3>
+                
             </div> 
         );
     });
     
     return(
-        <div className="domoList">
-            {domoNodes}
+        <div className="noteList">
+            {noteNodes}
         </div>
     );
 };
-const loadDomosFromServer = () =>{
-    sendAjax('GET', '/getDomos', null, (data) =>{
+const loadNotesFromServer = () =>{
+    sendAjax('GET', '/getNotes', null, (data) =>{
        ReactDOM.render(
-        <DomoList domos={data.domos}/>, document.querySelector("#domos")
+        <NoteList notes={data.notes}/>, document.querySelector("#notes")
        );
     });
 };
@@ -76,25 +81,25 @@ const loadDomosFromServer = () =>{
 
 const setup = function(csrf) {
     ReactDOM.render(
-        <DomoForm csrf={csrf}/>, document.querySelector("#makeDomo")
+        <NoteForm csrf={csrf}/>, document.querySelector("#makeNote")
     );
     ReactDOM.render(
-        <DomoList domos={[]}/>, document.querySelector("#domos")
+        <NoteList notes={[]}/>, document.querySelector("#notes")
     );
     
-    //Event bubbling to make edit links trigger Domo Edit mode
-    //For now it just deletes the domo
+    //Event bubbling to make edit links trigger Note Edit mode
+    //For now it just deletes the note
     document.addEventListener('click', function (event) {
-    if ( event.target.classList.contains( 'domoEdit' ) ) {
+    if ( event.target.classList.contains( 'noteEdit' ) ) {
         event.preventDefault();
-        //let domoId = event.target.parentElement.id;
+        //let noteId = event.target.parentElement.id;
         getEditToken();
         
     }
 }, false);
     
     
-    loadDomosFromServer();
+    loadNotesFromServer();
 };
 const getToken = () =>{
     sendAjax('GET', '/getToken', null, (result) =>{
@@ -111,27 +116,27 @@ $(document).ready(function(){
 
 
 
-const handleEditDomo = (e) => {
+const handleEditNote = (e) => {
     e.preventDefault();
     
-    $("#domoMessage").animate({width: 'hide'},350);
+    $("#noteMessage").animate({width: 'hide'},350);
     
-    sendAjax('POST', $("#domoEditForm").attr("action"), $("#domoEditForm").serialize(), function(){
-        loadEditDomosFromServer();
+    sendAjax('POST', $("#noteEditForm").attr("action"), $("#noteEditForm").serialize(), function(){
+        loadEditNotesFromServer();
     });
     return false;
 };
 
 
-const DomoEditForm = (props) =>{
+const NoteEditForm = (props) =>{
     //console.dir(props);
     return(
-        <form id="domoEditForm"
-            onSubmit={handleEditDomo}
-            name="domoEditForm"
-            action="/deleteDomos"
+        <form id="noteEditForm"
+            onSubmit={handleEditNote}
+            name="noteEditForm"
+            action="/deleteNotes"
             method="POST"
-            className="domoEditForm"
+            className="noteEditForm"
         >
         
         <input type="hidden" name="_csrf" value={props.csrf}/>
@@ -142,15 +147,15 @@ const DomoEditForm = (props) =>{
 
 let currentId;
 
-const DomoDeleteForm = (props) =>{
-    console.dir("Domo Delete Form");
+const NoteDeleteForm = (props) =>{
+    console.dir("Note Delete Form");
     return(
-        <form id="domoDeleteForm"
+        <form id="noteDeleteForm"
             
-            name="domoDeleteForm"
-            action="/deleteDomos"
+            name="noteDeleteForm"
+            action="/deleteNotes"
             method="POST"
-            className="domoDeleteForm"
+            className="noteDeleteForm"
         >
         <input type="hidden" name="_id" value={currentId}/>
         <input type="hidden" name="_csrf" value={props.csrf}/>
@@ -164,55 +169,60 @@ const FormHandle = (e) =>{
     
 }
 
-const handleDeleteDomo = (e) => {
+const handleDeleteNote = (e) => {
     //e.preventDefault();
     
-    $("#domoMessage").animate({width: 'hide'},350);
+    $("#noteMessage").animate({width: 'hide'},350);
     console.log("handle");
-    sendAjax('POST', $("#domoDeleteForm").attr("action"), $("#domoDeleteForm").serialize(), function(){
+    sendAjax('POST', $("#noteDeleteForm").attr("action"), $("#noteDeleteForm").serialize(), function(){
         
-        loadEditDomosFromServer();
+        loadEditNotesFromServer();
     });
     return false;
 };
 
-//displays all domos a user owns and adds inputs, delete and update buttons
-const DomoEditList = function(props){
-    if(props.domos.length === 0){
+//displays all notes a user owns and adds inputs, delete and update buttons
+const NoteEditList = function(props){
+    if(props.notes.length === 0){
         return(
-        <div className="domoEditList">
-            <h3 className="emptyDomo">No Domos to Edit</h3>    
+        <div className="noteEditList">
+            <h3 className="emptyNote">No Notes to Edit</h3>    
         </div>
         );
     }
-    const domoNodes = props.domos.map(function(domo){
+    const noteNodes = props.notes.map(function(note){
         return(
-            <div key={domo._id} id={domo._id} className="domo">
-                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace"/>
-                <h3 className="domoName">Name: <input id="domoName" type="text" name="name" placeholder={domo.name}/></h3>
-                <h3 className="domoAge">Age: <input id="domoAge" type="text" name="age" placeholder={domo.age}/></h3>
-                <h3 className="domoLevel">Level: <input id="domoLevel" type="text" name="level" placeholder={domo.level}/></h3>
-                <h3 className="domoDelete" id="domoDelete">DELETE </h3>
-                <h3 className="domoUpdate"id="domoUpdate"> UPDATE</h3>
+            <div key={note._id} id={note._id} className="note">
+                
+        <label htmlFor="title">Title: </label>
+        <input id="noteTitle" type="text" name="title" placeholder="Note Title"/>
+        <label htmlFor="desc">Description: </label>
+        <textarea id="noteDesc" type="text" name="desc" placeholder="Note Description"/>
+        <label htmlFor="diffLevel">Difficulty Level: </label>
+        <input id="noteDiffLevel" type="number"  min="0" max="5" name="diffLevel" placeholder="Task difficulty"/>
+        <label htmlFor="dueDate">Due date: </label>
+        <input id="noteDueDate" type="date" name="dueDate" placeholder="Note Description"/>
+            <h3 className="noteDelete" id="noteDelete">Delete</h3>
+            <h3 className="noteUpdate" id="noteUpdate">Update</h3>
             </div> 
         );
     });
     
     return(
         <div>
-        <h1 id="editMessage">Select Domo to Edit or Delete</h1>
-        <div className="domoEditList">
+        <h1 id="editMessage">Select Note to Edit or Delete</h1>
+        <div className="noteEditList">
         
-            {domoNodes}
+            {noteNodes}
         </div>
         </div>
     );
 };
 //loads the edit screen
-const loadEditDomosFromServer = () =>{
-    sendAjax('GET', '/getDomos', null, (data) =>{
+const loadEditNotesFromServer = () =>{
+    sendAjax('GET', '/getNotes', null, (data) =>{
        ReactDOM.render(
-        <DomoEditList domos={data.domos}/>, document.querySelector("#domos")
+        <NoteEditList notes={data.notes}/>, document.querySelector("#notes")
        );
     });
 };
@@ -221,33 +231,33 @@ const loadEditDomosFromServer = () =>{
 const setupEdit = function(csrf) {
     //console.log("test");
     ReactDOM.render(
-        <DomoEditList domos={[]}/>, document.querySelector("#domos")
+        <NoteEditList notes={[]}/>, document.querySelector("#notes")
     );
      ReactDOM.render(
-        <DomoEditForm csrf={csrf}/>, document.querySelector("#makeDomo")
+        <NoteEditForm csrf={csrf}/>, document.querySelector("#makeNote")
     );
     
-    //Event bubbling to make edit links trigger Domo Edit mode
-    //For now it just deletes the domo
+    //Event bubbling to make edit links trigger Note Edit mode
+    //For now it just deletes the note
     document.addEventListener('click', function (event) {
-    if ( event.target.classList.contains( 'domoDelete' ) ) {
+    if ( event.target.classList.contains( 'noteDelete' ) ) {
         currentId = event.target.parentElement.id;
         ReactDOM.render(
-        <DomoDeleteForm csrf={csrf}/>, document.querySelector("#makeDomo")
+        <NoteDeleteForm csrf={csrf}/>, document.querySelector("#makeNote")
     );
-    handleDeleteDomo();    
+    handleDeleteNote();    
     }
 }, false);
     
     document.addEventListener('click', function (event) {
-    if ( event.target.classList.contains( 'domoUpdate' ) ) {
+    if ( event.target.classList.contains( 'noteUpdate' ) ) {
         console.log("clicked");
         
     }
 }, false);
     
     
-    loadEditDomosFromServer();
+    loadEditNotesFromServer();
 };
 
 //added to test CSRF on new page

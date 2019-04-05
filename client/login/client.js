@@ -43,13 +43,14 @@ const LoginWindow = (props) =>{
           method="POST"
           className="mainForm"
     >
-    
+    <div>
     <label htmlFor="username">Username: </label>
     <input id="user" type="text" name="username" placeholder="username" />   
     <label htmlFor="pass">Password: </label>
     <input id="pass" type="password" name="pass" placeholder="password" />   
     <input type="hidden" name="_csrf" value={props.csrf} />   
     <input className="formSubmit" type="submit"  value="Sign in"/>   
+    </div>
     </form>
     
     );

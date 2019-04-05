@@ -54,7 +54,7 @@ NoteSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
-  return NoteModel.find(search).select('name age level').exec(callback);
+  return NoteModel.find(search).select('title desc dueDate diffLevel').exec(callback);
 };
 
 NoteSchema.statics.findByKey = (key, callback) => {

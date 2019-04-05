@@ -1,123 +1,134 @@
 "use strict";
 
-var handleDomo = function handleDomo(e) {
+var handleNote = function handleNote(e) {
     e.preventDefault();
 
-    $("#domoMessage").animate({ width: 'hide' }, 350);
-    if ($("#domoName").val() == '' || $("domoAge").val() == '' || $("domoLevel").val() == '') {
+    $("#noteMessage").animate({ width: 'hide' }, 350);
+    if ($("#noteName").val() == '' || $("noteAge").val() == '' || $("noteLevel").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
 
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-        loadDomosFromServer();
+    sendAjax('POST', $("#noteForm").attr("action"), $("#noteForm").serialize(), function () {
+        loadNotesFromServer();
     });
     return false;
 };
 
-var DomoForm = function DomoForm(props) {
+var NoteForm = function NoteForm(props) {
     return React.createElement(
         "form",
-        { id: "domoForm",
-            onSubmit: handleDomo,
-            name: "domoForm",
+        { id: "noteForm",
+            onSubmit: handleNote,
+            name: "noteForm",
             action: "/maker",
             method: "POST",
-            className: "domoForm"
+            className: "noteForm"
         },
         React.createElement(
             "label",
-            { htmlFor: "name" },
-            "Name: "
+            { htmlFor: "title" },
+            "Title: "
         ),
-        React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
+        React.createElement("input", { id: "noteTitle", type: "text", name: "title", placeholder: "Note Title" }),
         React.createElement(
             "label",
-            { htmlFor: "age" },
-            "Age: "
+            { htmlFor: "desc" },
+            "Description: "
         ),
-        React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+        React.createElement("textarea", { id: "noteDesc", type: "text", name: "desc", placeholder: "Note Description" }),
         React.createElement(
             "label",
-            { htmlFor: "level" },
-            "Level: "
+            { htmlFor: "diffLevel" },
+            "Difficulty Level: "
         ),
-        React.createElement("input", { id: "domoLevel", type: "text", name: "level", placeholder: "Domo Level" }),
+        React.createElement("input", { id: "noteDiffLevel", type: "number", min: "0", max: "5", name: "diffLevel", placeholder: "Task difficulty" }),
+        React.createElement(
+            "label",
+            { htmlFor: "dueDate" },
+            "Due date: "
+        ),
+        React.createElement("input", { id: "noteDueDate", type: "date", name: "dueDate", placeholder: "Note Description" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
+        React.createElement("input", { className: "makeNoteSubmit", type: "submit", value: "Make Note" })
     );
 };
 
-var DomoList = function DomoList(props) {
-    if (props.domos.length === 0) {
+var NoteList = function NoteList(props) {
+    if (props.notes.length === 0) {
         return React.createElement(
             "div",
-            { className: "domoList" },
+            { className: "noteList" },
             React.createElement(
                 "h3",
-                { className: "emptyDomo" },
-                "No Domos yet"
+                { className: "emptyNote" },
+                "No Notes yet"
             )
         );
     }
-    var domoNodes = props.domos.map(function (domo) {
+    var noteNodes = props.notes.map(function (note) {
         return React.createElement(
             "div",
-            { key: domo._id, id: domo._id, className: "domo" },
-            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
+            { key: note._id, id: note._id, className: "note" },
             React.createElement(
                 "h3",
-                { className: "domoName" },
-                "Name: ",
-                domo.name
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoAge" },
-                "Age: ",
-                domo.age
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoLevel" },
-                "Level: ",
-                domo.level
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoEdit" },
+                { className: "noteEdit" },
                 "Edit"
+            ),
+            React.createElement(
+                "h3",
+                { className: "noteTitle" },
+                "Title: ",
+                note.title
+            ),
+            React.createElement(
+                "h3",
+                { className: "noteDesc" },
+                "Description: ",
+                note.desc
+            ),
+            React.createElement(
+                "h3",
+                { className: "noteDiffLevel" },
+                "Difficulty: ",
+                note.diffLevel
+            ),
+            React.createElement(
+                "h3",
+                { className: "noteDueDate" },
+                "Due Date: ",
+                note.dueDate
             )
         );
     });
 
     return React.createElement(
         "div",
-        { className: "domoList" },
-        domoNodes
+        { className: "noteList" },
+        noteNodes
     );
 };
-var loadDomosFromServer = function loadDomosFromServer() {
-    sendAjax('GET', '/getDomos', null, function (data) {
-        ReactDOM.render(React.createElement(DomoList, { domos: data.domos }), document.querySelector("#domos"));
+var loadNotesFromServer = function loadNotesFromServer() {
+    sendAjax('GET', '/getNotes', null, function (data) {
+        ReactDOM.render(React.createElement(NoteList, { notes: data.notes }), document.querySelector("#notes"));
     });
 };
 
 var setup = function setup(csrf) {
-    ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
-    ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
+    ReactDOM.render(React.createElement(NoteForm, { csrf: csrf }), document.querySelector("#makeNote"));
+    ReactDOM.render(React.createElement(NoteList, { notes: [] }), document.querySelector("#notes"));
 
-    //Event bubbling to make edit links trigger Domo Edit mode
-    //For now it just deletes the domo
+    //Event bubbling to make edit links trigger Note Edit mode
+    //For now it just deletes the note
     document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('domoEdit')) {
+        if (event.target.classList.contains('noteEdit')) {
             event.preventDefault();
-            //let domoId = event.target.parentElement.id;
+            //let noteId = event.target.parentElement.id;
             getEditToken();
         }
     }, false);
 
-    loadDomosFromServer();
+    loadNotesFromServer();
 };
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
@@ -129,27 +140,27 @@ $(document).ready(function () {
     getToken();
 });
 
-var handleEditDomo = function handleEditDomo(e) {
+var handleEditNote = function handleEditNote(e) {
     e.preventDefault();
 
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#noteMessage").animate({ width: 'hide' }, 350);
 
-    sendAjax('POST', $("#domoEditForm").attr("action"), $("#domoEditForm").serialize(), function () {
-        loadEditDomosFromServer();
+    sendAjax('POST', $("#noteEditForm").attr("action"), $("#noteEditForm").serialize(), function () {
+        loadEditNotesFromServer();
     });
     return false;
 };
 
-var DomoEditForm = function DomoEditForm(props) {
+var NoteEditForm = function NoteEditForm(props) {
     //console.dir(props);
     return React.createElement(
         "form",
-        { id: "domoEditForm",
-            onSubmit: handleEditDomo,
-            name: "domoEditForm",
-            action: "/deleteDomos",
+        { id: "noteEditForm",
+            onSubmit: handleEditNote,
+            name: "noteEditForm",
+            action: "/deleteNotes",
             method: "POST",
-            className: "domoEditForm"
+            className: "noteEditForm"
         },
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
     );
@@ -157,16 +168,16 @@ var DomoEditForm = function DomoEditForm(props) {
 
 var currentId = void 0;
 
-var DomoDeleteForm = function DomoDeleteForm(props) {
-    console.dir("Domo Delete Form");
+var NoteDeleteForm = function NoteDeleteForm(props) {
+    console.dir("Note Delete Form");
     return React.createElement(
         "form",
-        { id: "domoDeleteForm",
+        { id: "noteDeleteForm",
 
-            name: "domoDeleteForm",
-            action: "/deleteDomos",
+            name: "noteDeleteForm",
+            action: "/deleteNotes",
             method: "POST",
-            className: "domoDeleteForm"
+            className: "noteDeleteForm"
         },
         React.createElement("input", { type: "hidden", name: "_id", value: currentId }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
@@ -175,63 +186,68 @@ var DomoDeleteForm = function DomoDeleteForm(props) {
 
 var FormHandle = function FormHandle(e) {};
 
-var handleDeleteDomo = function handleDeleteDomo(e) {
+var handleDeleteNote = function handleDeleteNote(e) {
     //e.preventDefault();
 
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#noteMessage").animate({ width: 'hide' }, 350);
     console.log("handle");
-    sendAjax('POST', $("#domoDeleteForm").attr("action"), $("#domoDeleteForm").serialize(), function () {
+    sendAjax('POST', $("#noteDeleteForm").attr("action"), $("#noteDeleteForm").serialize(), function () {
 
-        loadEditDomosFromServer();
+        loadEditNotesFromServer();
     });
     return false;
 };
 
-//displays all domos a user owns and adds inputs, delete and update buttons
-var DomoEditList = function DomoEditList(props) {
-    if (props.domos.length === 0) {
+//displays all notes a user owns and adds inputs, delete and update buttons
+var NoteEditList = function NoteEditList(props) {
+    if (props.notes.length === 0) {
         return React.createElement(
             "div",
-            { className: "domoEditList" },
+            { className: "noteEditList" },
             React.createElement(
                 "h3",
-                { className: "emptyDomo" },
-                "No Domos to Edit"
+                { className: "emptyNote" },
+                "No Notes to Edit"
             )
         );
     }
-    var domoNodes = props.domos.map(function (domo) {
+    var noteNodes = props.notes.map(function (note) {
         return React.createElement(
             "div",
-            { key: domo._id, id: domo._id, className: "domo" },
-            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
+            { key: note._id, id: note._id, className: "note" },
+            React.createElement(
+                "label",
+                { htmlFor: "title" },
+                "Title: "
+            ),
+            React.createElement("input", { id: "noteTitle", type: "text", name: "title", placeholder: "Note Title" }),
+            React.createElement(
+                "label",
+                { htmlFor: "desc" },
+                "Description: "
+            ),
+            React.createElement("textarea", { id: "noteDesc", type: "text", name: "desc", placeholder: "Note Description" }),
+            React.createElement(
+                "label",
+                { htmlFor: "diffLevel" },
+                "Difficulty Level: "
+            ),
+            React.createElement("input", { id: "noteDiffLevel", type: "number", min: "0", max: "5", name: "diffLevel", placeholder: "Task difficulty" }),
+            React.createElement(
+                "label",
+                { htmlFor: "dueDate" },
+                "Due date: "
+            ),
+            React.createElement("input", { id: "noteDueDate", type: "date", name: "dueDate", placeholder: "Note Description" }),
             React.createElement(
                 "h3",
-                { className: "domoName" },
-                "Name: ",
-                React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: domo.name })
+                { className: "noteDelete", id: "noteDelete" },
+                "Delete"
             ),
             React.createElement(
                 "h3",
-                { className: "domoAge" },
-                "Age: ",
-                React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: domo.age })
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoLevel" },
-                "Level: ",
-                React.createElement("input", { id: "domoLevel", type: "text", name: "level", placeholder: domo.level })
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoDelete", id: "domoDelete" },
-                "DELETE "
-            ),
-            React.createElement(
-                "h3",
-                { className: "domoUpdate", id: "domoUpdate" },
-                " UPDATE"
+                { className: "noteUpdate", id: "noteUpdate" },
+                "Update"
             )
         );
     });
@@ -242,45 +258,45 @@ var DomoEditList = function DomoEditList(props) {
         React.createElement(
             "h1",
             { id: "editMessage" },
-            "Select Domo to Edit or Delete"
+            "Select Note to Edit or Delete"
         ),
         React.createElement(
             "div",
-            { className: "domoEditList" },
-            domoNodes
+            { className: "noteEditList" },
+            noteNodes
         )
     );
 };
 //loads the edit screen
-var loadEditDomosFromServer = function loadEditDomosFromServer() {
-    sendAjax('GET', '/getDomos', null, function (data) {
-        ReactDOM.render(React.createElement(DomoEditList, { domos: data.domos }), document.querySelector("#domos"));
+var loadEditNotesFromServer = function loadEditNotesFromServer() {
+    sendAjax('GET', '/getNotes', null, function (data) {
+        ReactDOM.render(React.createElement(NoteEditList, { notes: data.notes }), document.querySelector("#notes"));
     });
 };
 
 //sets up edit screen with CSRF tokens and event listeners
 var setupEdit = function setupEdit(csrf) {
     //console.log("test");
-    ReactDOM.render(React.createElement(DomoEditList, { domos: [] }), document.querySelector("#domos"));
-    ReactDOM.render(React.createElement(DomoEditForm, { csrf: csrf }), document.querySelector("#makeDomo"));
+    ReactDOM.render(React.createElement(NoteEditList, { notes: [] }), document.querySelector("#notes"));
+    ReactDOM.render(React.createElement(NoteEditForm, { csrf: csrf }), document.querySelector("#makeNote"));
 
-    //Event bubbling to make edit links trigger Domo Edit mode
-    //For now it just deletes the domo
+    //Event bubbling to make edit links trigger Note Edit mode
+    //For now it just deletes the note
     document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('domoDelete')) {
+        if (event.target.classList.contains('noteDelete')) {
             currentId = event.target.parentElement.id;
-            ReactDOM.render(React.createElement(DomoDeleteForm, { csrf: csrf }), document.querySelector("#makeDomo"));
-            handleDeleteDomo();
+            ReactDOM.render(React.createElement(NoteDeleteForm, { csrf: csrf }), document.querySelector("#makeNote"));
+            handleDeleteNote();
         }
     }, false);
 
     document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('domoUpdate')) {
+        if (event.target.classList.contains('noteUpdate')) {
             console.log("clicked");
         }
     }, false);
 
-    loadEditDomosFromServer();
+    loadEditNotesFromServer();
 };
 
 //added to test CSRF on new page

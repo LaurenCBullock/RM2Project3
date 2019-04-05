@@ -1,4 +1,16 @@
+@font-face {
+  font-family: "Fredericka the Great";
+  src: url(/assets/fonts/FrederickatheGreat-Regular.ttf) format("truetype");}
+@font-face {
+  font-family: "Love Ya Like A Sister";
+  src: url(/assets/fonts/LoveYaLikeASister.ttf) format("truetype");}
+@font-face {
+    font-family: "Reenie Beanie";
+  src: url(/assets/fonts/ReenieBeanie.ttf) format("truetype");}
+
+
 html, body {
+    font-family: "Love Ya Like A Sister";
     height: 100%;
     width: 100%;
     margin: 0;
@@ -16,8 +28,8 @@ html, body {
 
 nav {
     width: 100%;
-    height: 50px;
-    background-color: #55acee;
+    height: 80px;
+    background-color: #6daf67;
 }
 
 nav:nth-child(1) {
@@ -25,12 +37,13 @@ nav:nth-child(1) {
 }
 
 .navlink {
+    display: inline;
     padding: 5px;
     padding-top: 12px;
     padding-left: 20px;
     color: white;
     font-size: 1.3em;
-    float: left;
+    float: right;
 }
 
 .navlink a, .navlink a:link, .navlink a:visited, .navlink a:hover, .navlink a:active {
@@ -38,7 +51,7 @@ nav:nth-child(1) {
     text-decoration: none;
     padding: 5px;
     border-radius: 4px;
-    background-color: #55acee;
+    background-color: #6daf67;
     transition: background-color 0.4s ease;
 }
 
@@ -47,47 +60,66 @@ nav:nth-child(1) {
     background-color: #66bdff;
 }
 
-.domoForm {
-    border: 2px solid #338acc;
-    height: 35px;
-    width: 900px;
-    margin-top:0px;
-    padding-top:10px;
-    background-color: #55acee;
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
+.noteForm {
+    
+    margin: auto;
+    margin-top: 40px;
+    display: block;
+    border: 8px inset #3e8638;
+    width: 40%;
+    padding:20px;
+    background-color: #6daf67;
 }
 
-.domoForm label {
-    display: inline-block;
-    width: 75px;
+.noteForm label {
+    margin: auto;
+    width: 50%;
+    display: block;
+    width: auto;
     margin-left: 10px;
+    margin-right: 10px;
     font-size: 1.2em;
-    float: left;
+    float:none;
+    color: Black;
+}
+.noteForm textarea {
+    margin: auto;
+    width: 50%;
+    height: 40px;
+    display: block;
+    font-size: 1.2em;
+    float:none;
+    color: black;
+    background-color: white;
+}
+
+
+.noteForm input {
+    margin: auto;
+    width: 50%;
+   display: block;
+    float:none;
+}
+
+.makeNoteSubmit {
+    padding: 10px !important;
+    transition: background-color 0.4s ease !important;
+    display: block !important;
+    width: 90px !important;
+    background-color: #6daf67 !important;
+    border-radius: 2px !important;
+    color: white !important;
+    text-decoration: none !important;
+    margin-top: 20px! important;
+}
+
+.makeNoteSubmit:link, .makeNoteSubmit:visited, .makeNoteSubmit:hover, .makeNoteSubmit:active {
     color: white;
 }
 
-.domoForm input[type=text] {
-    float:left;
-}
-
-.makeDomoSubmit {
+.makeNoteSubmit:hover {
     transition: background-color 0.4s ease;
-    display: inline;
-    width: 90px;
-    background-color: #55acee;
-    border-radius: 2px;
-    color: white;
-    text-decoration: none;
-}
-
-.makeDomoSubmit:link, .makeDomoSubmit:visited, .makeDomoSubmit:hover, .makeDomoSubmit:active {
-    color: white;
-}
-
-.makeDomoSubmit:hover {
-    transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: #3e8638;
 }
 
 .mainForm {
@@ -118,7 +150,7 @@ nav:nth-child(1) {
     margin-top: 14px;
     font-size: 1.2em;
     width: 100px;
-    background-color: #55acee;
+    background-color: #6daf67;
     border-radius: 2px;
     border-color: #66acee;
     padding: 3px 0px;
@@ -132,7 +164,7 @@ nav:nth-child(1) {
 
 .formSubmit:hover {
     transition: background-color 0.4s ease;
-    background-color: #338acc;
+    background-color: #3e8638;
 }
 
 #user, #pass, #pass2 {
@@ -144,10 +176,10 @@ nav:nth-child(1) {
 
 #user:focus, #pass:focus, #pass2:focus {
     outline: none;
-    box-shadow: 0px 0px 1px 1px #55acee;
+    box-shadow: 0px 0px 1px 1px #6daf67;
 }
 
-#domoMessage {
+#noteMessage {
     display:none;
     top: 250px;
     width: 250px;
@@ -158,7 +190,7 @@ nav:nth-child(1) {
     overflow: hidden;
 }
 
-#domoMessage h3 {
+#noteMessage h3 {
     width: 200px;
     position: absolute;
     top: 0px;
@@ -178,7 +210,7 @@ nav:nth-child(1) {
     font-style: italic;
 }
 
-#domo {
+#note {
     z-index: 225;
     margin-top: -20px;
     margin-left: 135px;
@@ -189,36 +221,34 @@ nav:nth-child(1) {
     transform: rotate(330deg);
 }
 
-#domos {
+#notes {
     width: 40%;
     min-width: 400px;
-    border: 2px solid #55acee;
+    border: 2px solid #6daf67;
     border-radius: 4px;
     margin: 0 auto;
     margin-top: 100px;
 }
 
-.domo {
-    width: 95%;
+.note {
+    background-image: url("/assets/img/notePaper.jpg");
+    width: 100%;
     margin: 0 auto;
     margin-top: 2px;
     margin-bottom: 2px;
-    border: 2px solid #55acee;
-    border-radius: 4px;
-    background-color: #55acee;
-    padding: 10px;
+    background-color: #6daf67;
     min-height:60px;
     overflow: hidden;
 }
 
-.domo:hover {
+.note:hover {
     transition: border-color 0.2s ease-out;
     border-color: rgba(255,255,255, 0.8);
     transition: background-color 2.6s ease-out;
     background-color: #66bfff;
 }
 
-img.domoFace {
+img.noteFace {
     margin-left: 25px;
     margin-right: 10px;
     height: 50px;
@@ -228,7 +258,7 @@ img.domoFace {
     float:left;
 }
 
-h3.emptyDomo {
+h3.emptyNote {
     width: 400px;
     font-size: 1.5em;
     margin: 0 auto;
@@ -236,40 +266,40 @@ h3.emptyDomo {
     margin-top: 18px;
 }
 
-h3.domoName {
+h3.noteTitle {
+    margin-top: 50px;
     display: inline-block;
-    text-align: left;
-    width: 120px;
+    text-align: center;
+    width: 70%;
     font-weight: bold;
-    padding-right: 40px;
-    padding-left: 40px;
     font-size: 1.5em;
 }
 
-h3.domoAge, h3.domoLevel  {
-    display: inline-block;
-    text-align: left;
-    width: 120px;
-    font-weight: bold;
-    padding-right: 40px;
-    font-size: 1.5em;
-}
 
-#domoName, #domoAge, #domoLevel{
-    display: inline-block;
-    text-align: left;
-}
 
-.domoEdit{
-    color: blue;
-    float:right;
-    vertical-align: top;
+.noteItem{
     display: inline-block;
-    text-align: right;
+    text-align: center;
     font-size: 1em;
 }
 
-#domoUpdate, #domoDelete{
+.noteEdit{
+    display: inline;
+    margin-top: 40px;
+    color: blue;
+    float:right;
+    padding: 15px;
+    vertical-align: top;
+    text-align: right;
+    font-size: 1em;
+}
+.note{
+    display: inline-block;
+    text-align: center;
+    font-size: 1em;
+}
+
+#noteUpdate, #noteDelete{
     color: blue;
     float:right;
     vertical-align: top;
@@ -289,16 +319,41 @@ h3.domoAge, h3.domoLevel  {
     font-size: 1.5em;
 }
 
-.domoEdit:hover, #domoUpdate:hover, #domoDelete:hover{
+.noteEdit:hover, #noteUpdate:hover, #noteDelete:hover{
     transition: color .1s;
     color: red;
 }
 
 
-.domo:first-child {
+.note:first-child {
     margin-top: 10px;
 }
 
-.domo:last-child {
+.note:last-child {
     margin-bottom:10px;
+    
+}
+nav a{
+    
+}
+
+
+.siteTitle{
+    font-family: 'Fredericka the Great', cursive;
+    
+    margin-top: 0px;
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 3em;
+}
+
+body{
+    background-image: url("/assets/img/schoolpattern.jpg");
+    background-repeat: repeat;
+}
+.mainForm div{
+    padding: 15px;
+    background-color: #6daf67;
+     border-radius: 25px;
 }
