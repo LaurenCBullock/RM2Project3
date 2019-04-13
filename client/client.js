@@ -64,7 +64,7 @@ $(document).ready(() => {
 
     $("#domoMessage").animate({width:'hide'},350);
 
-    if($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoLevel").val() == '') {
+    if($("#domoTitle").val() == '' || $("#domoDesc").val() == '' || $("#domoDiffLevel").val() == ''|| $("#domoDueDate").val() == '') {
       handleError("RAWR! All fields are required");
       return false;
     }

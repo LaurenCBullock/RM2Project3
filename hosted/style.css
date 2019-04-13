@@ -37,6 +37,7 @@ nav:nth-child(1) {
 }
 
 .navlink {
+    font-size: 2em;
     display: inline;
     padding: 5px;
     padding-top: 12px;
@@ -44,6 +45,7 @@ nav:nth-child(1) {
     color: white;
     font-size: 1.3em;
     float: right;
+    
 }
 
 .navlink a, .navlink a:link, .navlink a:visited, .navlink a:hover, .navlink a:active {
@@ -143,6 +145,8 @@ nav:nth-child(1) {
 }
 
 .formSubmit {
+    border-radius: 10px;
+    background-color: white;
     transition: background-color 0.4s ease;
     display: block;
     text-align: center;
@@ -150,11 +154,8 @@ nav:nth-child(1) {
     margin-top: 14px;
     font-size: 1.2em;
     width: 100px;
-    background-color: #6daf67;
     border-radius: 2px;
-    border-color: #66acee;
-    padding: 3px 0px;
-    color: white;
+    color: black;
     text-decoration: none;
 }
 
@@ -180,31 +181,35 @@ nav:nth-child(1) {
 }
 
 #noteMessage {
+    text-align: center;
+    background-color: black;
     display:none;
-    top: 250px;
-    width: 250px;
-    height: 650px;
+    top: 0px;
     position: absolute;
     z-index: 200;
-    right: 0px;
     overflow: hidden;
+    left:50%;
+    margin-left:-150px;
 }
 
 #noteMessage h3 {
-    width: 200px;
     position: absolute;
     top: 0px;
-    left: 20px;
 }
 
 #speech {
-    height: 120px;
+    height: 100px;
     width: 250px;
     z-index:300;
 }
 
 #errorMessage {
-    font-size: 1.2em;
+    padding: 5px;
+    vertical-align:middle;
+    display: block;
+    text-align: center;
+    margin: auto;
+    font-size: 1.5em;
     font-weight: bold;
     color: red;
     font-style: italic;
@@ -224,8 +229,6 @@ nav:nth-child(1) {
 #notes {
     width: 40%;
     min-width: 400px;
-    border: 2px solid #6daf67;
-    border-radius: 4px;
     margin: 0 auto;
     margin-top: 100px;
 }
@@ -242,8 +245,6 @@ nav:nth-child(1) {
 }
 
 .note:hover {
-    transition: border-color 0.2s ease-out;
-    border-color: rgba(255,255,255, 0.8);
     transition: background-color 2.6s ease-out;
     background-color: #66bfff;
 }
@@ -260,18 +261,28 @@ img.noteFace {
 
 h3.emptyNote {
     width: 400px;
+    padding: 0px;
     font-size: 1.5em;
     margin: 0 auto;
     text-align: center;
-    margin-top: 18px;
+    margin-top: 50px;
 }
 
 h3.noteTitle {
-    margin-top: 50px;
+    margin-top: 40px;
     display: inline-block;
     text-align: center;
     width: 70%;
     font-weight: bold;
+    font-size: 1.5em;
+}
+
+h3.noteDesc, h3.noteDiffLevel, noteDueDate{
+    margin-top: 10px;
+    padding: 0px;
+    display: inline-block;
+    text-align: center;
+    width: 70%;
     font-size: 1.5em;
 }
 
@@ -284,16 +295,18 @@ h3.noteTitle {
 }
 
 .noteEdit{
-    display: inline;
+    position:relative;
+    margin: auto;
+    display: block;
+    float: left;
+    left:90%;
     margin-top: 40px;
     color: blue;
-    float:right;
-    padding: 15px;
     vertical-align: top;
-    text-align: right;
     font-size: 1em;
 }
 .note{
+    box-shadow:  5px 10px #888888;
     display: inline-block;
     text-align: center;
     font-size: 1em;
@@ -313,10 +326,25 @@ h3.noteTitle {
     font-size: 1em;
 } 
 
-#editMessage{
-    
+#editMessage, .backMessage{
+    border: 8px inset #3e8638;
+    box-shadow:  5px 10px #888888;
+    margin: auto;
+    width: 50%;
+    background-color: #6daf67;
+    padding: 10px;
     text-align: center;
     font-size: 1.5em;
+}
+#editMessage{
+    font-size: 3em;
+}
+.backMessage{
+    margin-top: 40px;
+}
+
+.backMessage:hover{
+    background-color: aqua;
 }
 
 .noteEdit:hover, #noteUpdate:hover, #noteDelete:hover{
@@ -326,22 +354,18 @@ h3.noteTitle {
 
 
 .note:first-child {
-    margin-top: 10px;
+    margin-top: 40px;
 }
 
 .note:last-child {
     margin-bottom:10px;
     
 }
-nav a{
-    
-}
 
 
 .siteTitle{
     font-family: 'Fredericka the Great', cursive;
-    
-    margin-top: 0px;
+    margin-top: 10px;
     color: black;
     text-decoration: none;
     display: inline-block;
@@ -356,4 +380,43 @@ body{
     padding: 15px;
     background-color: #6daf67;
      border-radius: 25px;
+}
+#loginButton, #signupButton{
+    text-shadow: 2px 2px 4px #808080;
+    background-color: white;
+    color: black;
+}
+.note label, .note input, .note textarea{
+    margin: auto;
+    width: 50%;
+    display: block;
+    margin-top: 10px;
+}
+
+#testad1{
+    font-size: 8em;
+    text-align: center;
+    padding-top: 15%;
+    padding-bottom: 15%;
+    margin-top: 100px;
+    margin-left: 20px;
+    float: left;
+    width: 20%;
+    display: block;
+    background-color: aqua;
+    
+}
+
+#testad2{
+    font-size: 8em;
+    text-align: center;
+    padding-top: 15%;
+    padding-bottom: 15%;
+    margin-top: 100px;
+    margin-right: 20px;
+    float: right;
+    width: 20%;
+    display: block;
+    background-color: aqua;
+    
 }

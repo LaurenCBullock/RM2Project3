@@ -14,7 +14,7 @@ const NoteSchema = new mongoose.Schema({
     trim: true,
     set: setTitle,
   },
-    
+
   desc: {
     type: String,
     required: true,
@@ -23,6 +23,11 @@ const NoteSchema = new mongoose.Schema({
 
   dueDate: {
     type: Date,
+    required: true,
+  },
+
+  dueTime: {
+    type: String,
     required: true,
   },
 
@@ -48,21 +53,24 @@ NoteSchema.statics.toAPI = (doc) => ({
   title: doc.title,
   desc: doc.description,
   dueDate: doc.dueDate,
+  diffLevel: doc.diffLevel,
+  dueTime: doc.dueTime,
 });
 
 NoteSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
-  return NoteModel.find(search).select('title desc dueDate diffLevel').exec(callback);
+  return NoteModel.find(search).select('title desc dueDate diffLevel dueTime').exec(callback);
 };
 
 NoteSchema.statics.findByKey = (key, callback) => {
-    const search = {
+  const search = {
     _id: key,
   };
-    console.log(NoteModel);
-    return NoteModel.find(search).exec(callback)};
+  console.log(NoteModel);
+  return NoteModel.find(search).exec(callback);
+};
 
 NoteModel = mongoose.model('Note', NoteSchema);
 

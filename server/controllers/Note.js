@@ -3,7 +3,9 @@ const Note = models.Note;
 
 
 const makeNote = (req, res) => {
-  if (!req.body.title || !req.body.desc || !req.body.diffLevel || !req.body.dueDate) {
+  if (!req.body.title || !req.body.desc ||
+      !req.body.diffLevel || !req.body.dueDate
+      || !req.body.dueTime) {
     return res.status(400).json({ error: 'RAWR! Title, description, and date are required' });
   }
 
@@ -11,6 +13,7 @@ const makeNote = (req, res) => {
     title: req.body.title,
     desc: req.body.desc,
     dueDate: req.body.dueDate,
+    dueTime: req.body.dueTime,
     diffLevel: req.body.diffLevel,
     owner: req.session.account._id,
   };
@@ -55,16 +58,13 @@ const getNotes = (request, response) => {
 };
 
 
-const deleteNotes = (request, response) => {
-    console.log("Deleting: _id:" + request.body._id);
-  const req = request;
-  const res = response;
-    //Note.NoteModel.
-    
-      Note.NoteModel.deleteOne({"_id":request.body._id},(err) => {
-    console.dir(err);
-      });
+const deleteNotes = (request) => {
+  console.log(`Deleting: _id:${request.body._id}`);
+    // Note.NoteModel.
 
+  Note.NoteModel.deleteOne({ _id: request.body._id }, (err) => {
+    console.dir(err);
+  });
 };
 module.exports.makerPage = makerPage;
 module.exports.getNotes = getNotes;

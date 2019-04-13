@@ -4,7 +4,7 @@ var handleNote = function handleNote(e) {
     e.preventDefault();
 
     $("#noteMessage").animate({ width: 'hide' }, 350);
-    if ($("#noteName").val() == '' || $("noteAge").val() == '' || $("noteLevel").val() == '') {
+    if ($("#noteTitle").val() == '' || $("noteDesc").val() == '' || $("noteDiffLevel").val() == '' || $("noteDueTime").val() == '' || $("noteDueDate").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
@@ -49,6 +49,12 @@ var NoteForm = function NoteForm(props) {
             "Due date: "
         ),
         React.createElement("input", { id: "noteDueDate", type: "date", name: "dueDate", placeholder: "Note Description" }),
+        React.createElement(
+            "label",
+            { htmlFor: "dueTime" },
+            "Time due: "
+        ),
+        React.createElement("input", { id: "noteDueTime", type: "time", name: "dueTime", placeholder: "Note Description" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeNoteSubmit", type: "submit", value: "Make Note" })
     );
@@ -67,6 +73,7 @@ var NoteList = function NoteList(props) {
         );
     }
     var noteNodes = props.notes.map(function (note) {
+        var d = new Date(note.dueDate);
         return React.createElement(
             "div",
             { key: note._id, id: note._id, className: "note" },
@@ -97,7 +104,13 @@ var NoteList = function NoteList(props) {
                 "h3",
                 { className: "noteDueDate" },
                 "Due Date: ",
-                note.dueDate
+                d.toDateString()
+            ),
+            React.createElement(
+                "h3",
+                { className: "noteDueTime" },
+                "Due Time: ",
+                note.dueTime
             )
         );
     });
@@ -143,7 +156,7 @@ $(document).ready(function () {
 var handleEditNote = function handleEditNote(e) {
     e.preventDefault();
 
-    $("#noteMessage").animate({ width: 'hide' }, 350);
+    $("#noteMessage").animate({ height: 'hide' }, 350);
 
     sendAjax('POST', $("#noteEditForm").attr("action"), $("#noteEditForm").serialize(), function () {
         loadEditNotesFromServer();
@@ -191,9 +204,9 @@ var handleDeleteNote = function handleDeleteNote(e) {
 
     $("#noteMessage").animate({ width: 'hide' }, 350);
     console.log("handle");
-    sendAjax('POST', $("#noteDeleteForm").attr("action"), $("#noteDeleteForm").serialize(), function () {
-
-        loadEditNotesFromServer();
+    sendAjax('POST', $("#noteDeleteForm").attr("action"), $("#noteDeleteForm").serialize(), function () {});
+    sendAjax('GET', '/getNotes', null, function (data) {
+        ReactDOM.render(React.createElement(NoteEditList, { notes: data.notes }), document.querySelector("#notes"));
     });
     return false;
 };
@@ -203,51 +216,63 @@ var NoteEditList = function NoteEditList(props) {
     if (props.notes.length === 0) {
         return React.createElement(
             "div",
-            { className: "noteEditList" },
+            null,
+            React.createElement(
+                "h1",
+                { id: "editMessage" },
+                "Select Note to Edit or Delete"
+            ),
             React.createElement(
                 "h3",
                 { className: "emptyNote" },
                 "No Notes to Edit"
+            ),
+            React.createElement(
+                "h1",
+                { className: "backMessage" },
+                "BACK"
             )
         );
     }
     var noteNodes = props.notes.map(function (note) {
+        var d = new Date(note.dueDate);
         return React.createElement(
             "div",
             { key: note._id, id: note._id, className: "note" },
             React.createElement(
-                "label",
-                { htmlFor: "title" },
-                "Title: "
+                "h3",
+                { className: "noteTitle" },
+                "Title: ",
+                note.title
             ),
-            React.createElement("input", { id: "noteTitle", type: "text", name: "title", placeholder: "Note Title" }),
             React.createElement(
-                "label",
-                { htmlFor: "desc" },
-                "Description: "
+                "h3",
+                { className: "noteDesc" },
+                "Description: ",
+                note.desc
             ),
-            React.createElement("textarea", { id: "noteDesc", type: "text", name: "desc", placeholder: "Note Description" }),
             React.createElement(
-                "label",
-                { htmlFor: "diffLevel" },
-                "Difficulty Level: "
+                "h3",
+                { className: "noteDiffLevel" },
+                "Difficulty: ",
+                note.diffLevel
             ),
-            React.createElement("input", { id: "noteDiffLevel", type: "number", min: "0", max: "5", name: "diffLevel", placeholder: "Task difficulty" }),
             React.createElement(
-                "label",
-                { htmlFor: "dueDate" },
-                "Due date: "
+                "h3",
+                { className: "noteDueDate" },
+                "Due Date: ",
+                d.toDateString()
             ),
-            React.createElement("input", { id: "noteDueDate", type: "date", name: "dueDate", placeholder: "Note Description" }),
+            React.createElement(
+                "h3",
+                { className: "noteDueTime" },
+                "Due Time: ",
+                note.dueTime
+            ),
             React.createElement(
                 "h3",
                 { className: "noteDelete", id: "noteDelete" },
                 "Delete"
-            ),
-            React.createElement(
-                "h3",
-                { className: "noteUpdate", id: "noteUpdate" },
-                "Update"
             )
         );
     });
@@ -264,6 +289,11 @@ var NoteEditList = function NoteEditList(props) {
             "div",
             { className: "noteEditList" },
             noteNodes
+        ),
+        React.createElement(
+            "h1",
+            { className: "backMessage" },
+            "BACK"
         )
     );
 };
@@ -290,6 +320,13 @@ var setupEdit = function setupEdit(csrf) {
         }
     }, false);
 
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('backMessage')) {
+            getToken();
+        }
+    }, false);
+
+    //emptyNote
     document.addEventListener('click', function (event) {
         if (event.target.classList.contains('noteUpdate')) {
             console.log("clicked");

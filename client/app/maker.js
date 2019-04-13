@@ -2,7 +2,7 @@ const handleNote = (e) => {
     e.preventDefault();
     
     $("#noteMessage").animate({width: 'hide'},350);
-    if($("#noteName").val() == '' || $("noteAge").val() == '' || $("noteLevel").val() == ''){
+    if($("#noteTitle").val() == '' || $("noteDesc").val() == '' || $("noteDiffLevel").val() == '' || $("noteDueTime").val() == '' || $("noteDueDate").val() == ''){
         handleError("RAWR! All fields are required");
         return false;
     }
@@ -30,7 +30,8 @@ const NoteForm = (props) =>{
         <input id="noteDiffLevel" type="number"  min="0" max="5" name="diffLevel" placeholder="Task difficulty"/>
         <label htmlFor="dueDate">Due date: </label>
         <input id="noteDueDate" type="date" name="dueDate" placeholder="Note Description"/>
-        
+        <label htmlFor="dueTime">Time due: </label>
+        <input id="noteDueTime" type="time" name="dueTime" placeholder="Note Description"/>
         <input type="hidden" name="_csrf" value={props.csrf}/>
         <input className="makeNoteSubmit" type="submit" value="Make Note"/>
         </form>
@@ -50,6 +51,7 @@ const NoteList = function(props){
         );
     }
     const noteNodes = props.notes.map(function(note){
+        var d = new Date(note.dueDate);
         return(
             <div key={note._id} id={note._id} className="note">
                 <h3 className="noteEdit">Edit</h3>
@@ -57,8 +59,8 @@ const NoteList = function(props){
             
                 <h3 className="noteDesc">Description: {note.desc}</h3>
                 <h3 className="noteDiffLevel">Difficulty: {note.diffLevel}</h3>
-                <h3 className="noteDueDate">Due Date: {note.dueDate}</h3>
-                
+                <h3 className="noteDueDate">Due Date: {d.toDateString()}</h3>
+                <h3 className="noteDueTime">Due Time: {note.dueTime}</h3>
             </div> 
         );
     });
@@ -119,7 +121,7 @@ $(document).ready(function(){
 const handleEditNote = (e) => {
     e.preventDefault();
     
-    $("#noteMessage").animate({width: 'hide'},350);
+    $("#noteMessage").animate({height: 'hide'},350);
     
     sendAjax('POST', $("#noteEditForm").attr("action"), $("#noteEditForm").serialize(), function(){
         loadEditNotesFromServer();
@@ -176,7 +178,12 @@ const handleDeleteNote = (e) => {
     console.log("handle");
     sendAjax('POST', $("#noteDeleteForm").attr("action"), $("#noteDeleteForm").serialize(), function(){
         
-        loadEditNotesFromServer();
+        
+    });
+    sendAjax('GET', '/getNotes', null, (data) =>{
+       ReactDOM.render(
+        <NoteEditList notes={data.notes}/>, document.querySelector("#notes")
+       );
     });
     return false;
 };
@@ -185,25 +192,26 @@ const handleDeleteNote = (e) => {
 const NoteEditList = function(props){
     if(props.notes.length === 0){
         return(
-        <div className="noteEditList">
-            <h3 className="emptyNote">No Notes to Edit</h3>    
+            
+            
+            <div>
+        <h1 id="editMessage">Select Note to Edit or Delete</h1>
+        <h3 className="emptyNote">No Notes to Edit</h3> 
+        <h1 className="backMessage">BACK</h1>
         </div>
         );
     }
     const noteNodes = props.notes.map(function(note){
+        var d = new Date(note.dueDate);
         return(
             <div key={note._id} id={note._id} className="note">
-                
-        <label htmlFor="title">Title: </label>
-        <input id="noteTitle" type="text" name="title" placeholder="Note Title"/>
-        <label htmlFor="desc">Description: </label>
-        <textarea id="noteDesc" type="text" name="desc" placeholder="Note Description"/>
-        <label htmlFor="diffLevel">Difficulty Level: </label>
-        <input id="noteDiffLevel" type="number"  min="0" max="5" name="diffLevel" placeholder="Task difficulty"/>
-        <label htmlFor="dueDate">Due date: </label>
-        <input id="noteDueDate" type="date" name="dueDate" placeholder="Note Description"/>
-            <h3 className="noteDelete" id="noteDelete">Delete</h3>
-            <h3 className="noteUpdate" id="noteUpdate">Update</h3>
+                <h3 className="noteTitle">Title: {note.title}</h3>
+            
+                <h3 className="noteDesc">Description: {note.desc}</h3>
+                <h3 className="noteDiffLevel">Difficulty: {note.diffLevel}</h3>
+                <h3 className="noteDueDate">Due Date: {d.toDateString()}</h3>
+                <h3 className="noteDueTime">Due Time: {note.dueTime}</h3>
+		<h3 className="noteDelete" id="noteDelete">Delete</h3>
             </div> 
         );
     });
@@ -215,6 +223,7 @@ const NoteEditList = function(props){
         
             {noteNodes}
         </div>
+        <h1 className="backMessage">BACK</h1>
         </div>
     );
 };
@@ -247,14 +256,24 @@ const setupEdit = function(csrf) {
     );
     handleDeleteNote();    
     }
-}, false);
+    }, false);
     
+    
+    document.addEventListener('click', function (event) {
+    if ( event.target.classList.contains( 'backMessage' ) ) {
+        getToken();
+        
+    }
+    }, false);
+                                                       
+    
+    //emptyNote
     document.addEventListener('click', function (event) {
     if ( event.target.classList.contains( 'noteUpdate' ) ) {
         console.log("clicked");
         
     }
-}, false);
+    }, false);
     
     
     loadEditNotesFromServer();
