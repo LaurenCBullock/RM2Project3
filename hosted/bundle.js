@@ -3,7 +3,7 @@
 var handleNote = function handleNote(e) {
     e.preventDefault();
 
-    $("#noteMessage").animate({ width: 'hide' }, 350);
+    $("#noteMessage").animate({ height: 'hide' }, 350);
     if ($("#noteTitle").val() == '' || $("noteDesc").val() == '' || $("noteDiffLevel").val() == '' || $("noteDueTime").val() == '' || $("noteDueDate").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
@@ -202,7 +202,7 @@ var FormHandle = function FormHandle(e) {};
 var handleDeleteNote = function handleDeleteNote(e) {
     //e.preventDefault();
 
-    $("#noteMessage").animate({ width: 'hide' }, 350);
+    $("#noteMessage").animate({ height: 'hide' }, 350);
     console.log("handle");
     sendAjax('POST', $("#noteDeleteForm").attr("action"), $("#noteDeleteForm").serialize(), function () {});
     sendAjax('GET', '/getNotes', null, function (data) {
@@ -347,10 +347,10 @@ var getEditToken = function getEditToken() {
 
 var handleError = function handleError(message) {
     $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
+    $("#noteMessage").animate({ height: 'toggle' }, 350);
 };
 var redirect = function redirect(response) {
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#noteMessage").animate({ height: 'hide' }, 350);
     window.location = response.redirect;
 };
 
