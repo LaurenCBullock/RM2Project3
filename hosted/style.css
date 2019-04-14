@@ -183,7 +183,7 @@ nav:nth-child(1) {
 #noteMessage {
     text-align: center;
     background-color: black;
-    display: none;
+    display:none;
     top: 0px;
     position: absolute;
     z-index: 200;
