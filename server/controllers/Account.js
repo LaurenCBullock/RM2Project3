@@ -6,6 +6,37 @@ const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
+const changePass = (req, res) => {
+  res.render('changepass', { csrfToken: req.csrfToken() });
+    
+};
+
+
+const changePassHandle = (req, res) => {
+  console.log(req.session.account._id);
+  userID = req.session.account._id;
+    console.log(req.body.pass);
+    
+    let userPass;
+    let userSalt;
+    
+Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
+    const accountData = {
+      username: req.body.username,
+      salt,
+      password: hash,
+    };
+        console.log(accountData);
+    userPass = accountData.password;
+    userSalt = salt;
+        
+  });
+    
+    console.log("Pass:"+ userPass + "  Salt:" + usersalt);
+Account.AccountModel.update({_id:userID}, {$set: {"password":userPass}}, {$set: {"salt":userSalt}}, {multi:true}, function(err, result){
+               console.log("fin");
+});
+};
 
 const logout = (req, res) => {
   req.session.destroy();
@@ -90,5 +121,7 @@ const getToken = (request, response) => {
 module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
+module.exports.changePass = changePass;
+module.exports.changePassHandle = changePassHandle;
 module.exports.signup = signup;
 module.exports.getToken = getToken;
