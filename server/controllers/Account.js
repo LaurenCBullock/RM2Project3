@@ -6,41 +6,54 @@ const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
+// load the change pass page
 const changePass = (req, res) => {
   res.render('changepass', { csrfToken: req.csrfToken() });
-    
+};
+// load the delete account page
+const deleteAccount = (req, res) => {
+  res.render('deleteAccount', { csrfToken: req.csrfToken() });
 };
 
 
 const changePassHandle = (req, res) => {
   console.log(req.session.account._id);
-  let userID = req.session.account._id;
-    console.log(req.body.pass);
-    
-    let userPass;
-    let userSalt;
-    
-Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
+  const userID = req.session.account._id;
+  console.log(req.body.pass);
+
+  let userPass;
+  let userSalt;
+
+  Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
     const accountData = {
       username: req.session.account.username,
       salt,
       password: hash,
     };
-        console.log(accountData.salt);
+    console.log(accountData.salt);
     userPass = accountData.password;
     userSalt = salt;
-        Account.AccountModel.findById(userID, function (err, doc) {
-  if (err) {
-      console.log(err);
-  }
-  doc.password = userPass;
-  doc.salt = userSalt;
-            doc.save();
+    Account.AccountModel.findById(userID, (err, doc) => {
+      if (err) {
+        console.log(err);
+      }
+      const docu = doc;
+      docu.password = userPass;
+      docu.salt = userSalt;
+      docu.save();
+      return res.json({ redirect: '/maker' });
+    });
   });
-    
-    
-  
-});
+};
+
+const deleteAccountHandle = (req, res) => {
+  console.log(req.session.account._id);
+  const userID = req.session.account._id;
+
+  Account.AccountModel.deleteOne({ _id: userID }, (err) => {
+    res.json({ redirect: '/logout' });
+    if (err) { console.log(err); }
+  });
 };
 
 const logout = (req, res) => {
@@ -128,5 +141,7 @@ module.exports.login = login;
 module.exports.logout = logout;
 module.exports.changePass = changePass;
 module.exports.changePassHandle = changePassHandle;
+module.exports.deleteAccount = deleteAccount;
+module.exports.deleteAccountHandle = deleteAccountHandle;
 module.exports.signup = signup;
 module.exports.getToken = getToken;

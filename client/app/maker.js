@@ -288,6 +288,49 @@ const setupEdit = function(csrf) {
     loadEditNotesFromServer();
 };
 
+
+const setupEdit = function(csrf) {
+    //console.log("test");
+    ReactDOM.render(
+        <NoteEditList notes={[]}/>, document.querySelector("#notes")
+    );
+     ReactDOM.render(
+        <NoteEditForm csrf={csrf}/>, document.querySelector("#makeNote")
+    );
+    
+    //Event bubbling to make edit links trigger Note Edit mode
+    //For now it just deletes the note
+    document.addEventListener('click', function (event) {
+    if ( event.target.classList.contains( 'noteDelete' ) ) {
+        currentId = event.target.parentElement.id;
+        ReactDOM.render(
+        <NoteDeleteForm csrf={csrf}/>, document.querySelector("#makeNote")
+    );
+    handleDeleteNote();    
+    }
+    }, false);
+    
+    
+    document.addEventListener('click', function (event) {
+    if ( event.target.classList.contains( 'backMessage' ) ) {
+        getToken();
+        
+    }
+    }, false);
+                                                       
+    
+    //emptyNote
+    document.addEventListener('click', function (event) {
+    if ( event.target.classList.contains( 'noteUpdate' ) ) {
+        console.log("clicked");
+        
+    }
+    }, false);
+    
+    
+    loadEditNotesFromServer();
+};
+
 //added to test CSRF on new page
 //send and setup edit page
 const getEditToken = () =>{
@@ -296,23 +339,3 @@ const getEditToken = () =>{
         setupEdit(result.csrfToken);
     });
 };
-
-const getDAToken = () =>{
-    console.log("csrf token");
-    sendAjax('GET', '/getToken', null, (result) =>{
-        setupEdit(result.csrfToken);
-    });
-};
-
-
-
-
-
-
-
-
-
-
-
-
-

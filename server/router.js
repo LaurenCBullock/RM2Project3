@@ -10,8 +10,8 @@ const router = (app) => {
   app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
   app.get('/changePass', mid.requiresLogin, controllers.Account.changePass);
   app.post('/changePass', mid.requiresLogin, controllers.Account.changePassHandle);
-  //app.get('/deleteAccount', mid.requiresLogin, controllers.Account.deletePage);
-  //app.get('/deleteAccount', mid.requiresLogin, controllers.Account.deleteAccount);
+  app.get('/deleteAccount', mid.requiresLogin, controllers.Account.deleteAccount);
+  app.post('/deleteAccount', mid.requiresLogin, controllers.Account.deleteAccountHandle);
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
   app.get('/maker', mid.requiresLogin, controllers.Note.makerPage);
   app.post('/maker', mid.requiresLogin, controllers.Note.make);

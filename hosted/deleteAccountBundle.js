@@ -1,63 +1,60 @@
 "use strict";
-
-var handlePassChange = function handleSignup(e) {
+//deletes user account
+var handleDelete = function handleDelete(e) {
     e.preventDefault();
 
     $("#noteMessage").animate({ width: 'hide' }, 350);
 
-    if ($("#pass").val() == '' || $("#pass2").val() == '') {
+    if ($("#pass").val() == '') {
         handleError("All fields are required");
         return false;
     }
-
-    if ($("#pass").val() !== $("#pass2").val()) {
-        handleError("Passwords do not match");
-        return false;
-    }
-
     sendAjax('POST', $("#signupForm").attr("action"), $("#signupForm").serialize(), redirect);
     return false;
 };
 
-
-var changePassWindow = function changePassWindow (props) {
+//populates the page with inputs
+var deleteWindow = function deleteWindow (props) {
     return React.createElement(
         "form",
         { id: "signupForm",
             name: "signupForm",
-            onSubmit: handlePassChange,
-            action: "/changePass",
+            onSubmit: handleDelete,
+            action: "/deleteAccount",
             method: "POST",
             className: "mainForm"
         },
+            React.createElement(
+                "h1",
+                { htmlFor: "pass" },
+                "Confirm pass to delete:"
+            ),
         React.createElement(
             "div",
             null,
+            
             React.createElement(
                 "label",
                 { htmlFor: "pass" },
-                "New Pass: "
+                "Password: "
             ),
             React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
-            React.createElement(
-                "label",
-                { htmlFor: "pass2" },
-                "New Pass: "
-            ),
-            React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "retype Password" }),
+         
             React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-            React.createElement("input", { className: "formSubmit", type: "submit", value: "Change" })
-        )
+            React.createElement("input", { className: "formSubmit", type: "submit", value: "Delete" })
+        )//,
+         //React.createElement("input", { id:"back", className: "formSubmit", type: "submit", value: "Back" }),
     );
 };
 
-
-var createChangePassWindow = function createChangePassWindow (csrf) {
-    ReactDOM.render(React.createElement(changePassWindow , { csrf: csrf }), document.querySelector("#content"));
+//renders delete window to page to give us inputs
+var createDeleteWindow = function createChangePassWindow (csrf) {
+    ReactDOM.render(React.createElement(deleteWindow , { csrf: csrf }), document.querySelector("#content"));
 };
 
+//calls create delete window which populates the page
 var setup = function setup(csrf) {
-    createChangePassWindow(csrf);
+    createDeleteWindow(csrf);
 };
 
 var getToken = function getToken() {
