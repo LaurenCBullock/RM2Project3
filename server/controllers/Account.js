@@ -14,7 +14,7 @@ const changePass = (req, res) => {
 
 const changePassHandle = (req, res) => {
   console.log(req.session.account._id);
-  userID = req.session.account._id;
+  let userID = req.session.account._id;
     console.log(req.body.pass);
     
     let userPass;
@@ -22,19 +22,24 @@ const changePassHandle = (req, res) => {
     
 Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
     const accountData = {
-      username: req.body.username,
+      username: req.session.account.username,
       salt,
       password: hash,
     };
-        console.log(accountData);
+        console.log(accountData.salt);
     userPass = accountData.password;
     userSalt = salt;
-        
+        Account.AccountModel.findById(userID, function (err, doc) {
+  if (err) {
+      console.log(err);
+  }
+  doc.password = userPass;
+  doc.salt = userSalt;
+            doc.save();
   });
     
-    console.log("Pass:"+ userPass + "  Salt:" + usersalt);
-Account.AccountModel.update({_id:userID}, {$set: {"password":userPass}}, {$set: {"salt":userSalt}}, {multi:true}, function(err, result){
-               console.log("fin");
+    
+  
 });
 };
 

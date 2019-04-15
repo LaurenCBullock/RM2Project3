@@ -100,6 +100,15 @@ const setup = function(csrf) {
     }
 }, false);
     
+    document.addEventListener('click', function (event) {
+    if ( event.target.classList.contains( 'accountDelete' ) ) {
+        event.preventDefault();
+        
+        getDAToken();
+        
+    }
+}, false);
+    
     
     loadNotesFromServer();
 };
@@ -280,7 +289,15 @@ const setupEdit = function(csrf) {
 };
 
 //added to test CSRF on new page
+//send and setup edit page
 const getEditToken = () =>{
+    console.log("csrf token");
+    sendAjax('GET', '/getToken', null, (result) =>{
+        setupEdit(result.csrfToken);
+    });
+};
+
+const getDAToken = () =>{
     console.log("csrf token");
     sendAjax('GET', '/getToken', null, (result) =>{
         setupEdit(result.csrfToken);
