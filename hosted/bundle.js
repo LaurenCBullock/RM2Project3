@@ -5,7 +5,7 @@ var handleNote = function handleNote(e) {
 
     $("#noteMessage").animate({ height: 'hide' }, 350);
     if ($("#noteTitle").val() == '' || $("noteDesc").val() == '' || $("noteDiffLevel").val() == '' || $("noteDueTime").val() == '' || $("noteDueDate").val() == '') {
-        handleError("RAWR! All fields are required");
+        handleError("All fields are required");
         return false;
     }
 

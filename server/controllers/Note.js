@@ -6,7 +6,7 @@ const makeNote = (req, res) => {
   if (!req.body.title || !req.body.desc ||
       !req.body.diffLevel || !req.body.dueDate
       || !req.body.dueTime) {
-    return res.status(400).json({ error: 'RAWR! Title, description, and date are required' });
+    return res.status(400).json({ error: 'Title, description, and date are required' });
   }
 
   const noteData = {
