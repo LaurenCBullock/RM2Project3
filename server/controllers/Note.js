@@ -60,7 +60,7 @@ const getNotes = (request, response) => {
 
 
 const deleteNotes = (request) => {
-  console.log(`Deleting: _id:${request.body._id}`);
+  // console.log(`Deleting: _id:${request.body._id}`);
     // Note.NoteModel.
 
   Note.NoteModel.deleteOne({ _id: request.body._id }, (err) => {
@@ -68,65 +68,52 @@ const deleteNotes = (request) => {
   });
 };
 
-const updateNotes = (request,response) => {
-  console.log(`Updating: _id:${request.body._id}`);
+const updateNotes = (request) => {
+  // console.log(`Updating: _id:${request.body._id}`);
   Note.NoteModel.findById(request.body._id, (err, doc) => {
-      if (err) {
-        console.log(err);
-      }
-      console.dir(request.body);
-      console.log("title: " + request.body.title);
-      const docu = doc;
-      let c = false;
-      if(request.body.title != ''){
-         docu.title = request.body.title;
-          c = true;
-         };
-      if(request.body.desc != ''){
-         docu.desc = request.body.desc;
-          c = true;
-         };
-      if(request.body.dueDate != ''){
-         docu.dueDate = request.body.dueDate;
-          c = true;
-         };
-      if(request.body.dueTime != ''){
-         docu.dueTime = request.body.dueTime;
-          c = true;
-         };
-      if(request.body.Level != ''){
-         docu.Level = request.body.Level;
-          c = true;
-         };
-      if(request.body.noteFinished != ''){
-         docu.noteFinished = request.body.noteFinished;
-          c = true;
-         };
-      if(c = true){
-          docu.save();
-      };
-      
-      
-    });
-    
+    if (err) {
+      console.log(err);
+    }
+    // console.dir(request.body);
+    // console.log(`title: ${request.body.title}`);
+    const docu = doc;
+    if (request.body.title !== '') {
+      docu.title = request.body.title;
+    }
+    if (request.body.desc !== '') {
+      docu.desc = request.body.desc;
+    }
+    if (request.body.dueDate !== '') {
+      docu.dueDate = request.body.dueDate;
+    }
+    if (request.body.dueTime !== '') {
+      docu.dueTime = request.body.dueTime;
+    }
+    if (request.body.Level !== '') {
+      docu.Level = request.body.Level;
+    }
+    if (request.body.noteFinished !== '') {
+      docu.noteFinished = request.body.noteFinished;
+    }
+    docu.save();
+  });
 };
 
 const finishedNotesChange = (request, response) => {
-  console.log(request.body._id);
-    
-    
-    Note.NoteModel.findById(request.body._id, (err, doc) => {
-      if (err) {
-        console.log(err);
-      }
-      const docu = doc;
-      docu.noteFinished = !docu.noteFinished;
-        console.log(docu.noteFinished);
-        docu.save();
-        
-      return response.json({ redirect: '/maker' });
-    });
-  
+  // console.log(request.body._id);
+
+
+  Note.NoteModel.findById(request.body._id, (err, doc) => {
+    if (err) {
+      console.log(err);
+    }
+    const docu = doc;
+    docu.noteFinished = !docu.noteFinished;
+    // console.log(docu.noteFinished);
+    docu.save();
+
+    return response.json({ redirect: '/maker' });
+  });
 };
 
 module.exports.makerPage = makerPage;

@@ -17,9 +17,9 @@ const deleteAccount = (req, res) => {
 
 
 const changePassHandle = (req, res) => {
-  console.log(req.session.account._id);
+  // console.log(req.session.account._id);
   const userID = req.session.account._id;
-  console.log(req.body.pass);
+  // console.log(req.body.pass);
 
   let userPass;
   let userSalt;
@@ -30,7 +30,7 @@ const changePassHandle = (req, res) => {
       salt,
       password: hash,
     };
-    console.log(accountData.salt);
+    // console.log(accountData.salt);
     userPass = accountData.password;
     userSalt = salt;
     Account.AccountModel.findById(userID, (err, doc) => {
@@ -47,7 +47,7 @@ const changePassHandle = (req, res) => {
 };
 
 const deleteAccountHandle = (req, res) => {
-  console.log(req.session.account._id);
+  // console.log(req.session.account._id);
   const userID = req.session.account._id;
 
   Account.AccountModel.deleteOne({ _id: userID }, (err) => {
@@ -91,7 +91,7 @@ const signup = (request, response) => {
   req.body.pass = `${req.body.pass}`;
   req.body.pass2 = `${req.body.pass2}`;
 
-  console.log(req.body.username, req.body.pass, req.body.pass2);
+  // console.log(req.body.username, req.body.pass, req.body.pass2);
 
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
     return res.status(400).json({ error: 'RAWR! All fields are required' });
