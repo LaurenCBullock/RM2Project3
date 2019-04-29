@@ -604,6 +604,7 @@ var setupEdit = function setupEdit(csrf) {
             dueDate = event.target.parentElement.querySelector(".noteDueDate").value;
             dueTime = event.target.parentElement.querySelector(".noteDueTime").value;
             Level = event.target.parentElement.querySelector(".noteDiffLevel").value;
+            console.log(event.target.parentElement.querySelector(".noteDiffLevel").value);
 
             ReactDOM.render(React.createElement(NoteUpdateForm, { csrf: csrf }), document.querySelector("#makeNote"));
             handleUpdateNote();

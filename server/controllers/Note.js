@@ -90,7 +90,7 @@ const updateNotes = (request) => {
       docu.dueTime = request.body.dueTime;
     }
     if (request.body.Level !== '') {
-      docu.Level = request.body.Level;
+      docu.diffLevel = request.body.Level;
     }
     if (request.body.noteFinished !== '') {
       docu.noteFinished = request.body.noteFinished;
