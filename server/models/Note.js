@@ -36,6 +36,11 @@ const NoteSchema = new mongoose.Schema({
     min: 0,
     required: true,
   },
+    
+  noteFinished: {
+    type: Boolean,
+      required: true,
+  },
 
   owner: {
     type: mongoose.Schema.ObjectId,
@@ -55,13 +60,14 @@ NoteSchema.statics.toAPI = (doc) => ({
   dueDate: doc.dueDate,
   diffLevel: doc.diffLevel,
   dueTime: doc.dueTime,
+    noteFinished: doc.noteFinished,
 });
 
 NoteSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertId(ownerId),
   };
-  return NoteModel.find(search).select('title desc dueDate diffLevel dueTime').exec(callback);
+  return NoteModel.find(search).select('title desc dueDate diffLevel dueTime noteFinished').exec(callback);
 };
 
 NoteSchema.statics.findByKey = (key, callback) => {

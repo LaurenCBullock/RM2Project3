@@ -65,42 +65,40 @@ nav:nth-child(1) {
 .noteForm {
     
     margin: auto;
+    padding-top: 40px;
     margin-top: 40px;
-    display: block;
+    
     border: 8px inset #3e8638;
     width: 40%;
-    padding:20px;
     background-color: #6daf67;
 }
 
 .noteForm label {
+    display: inline-block;
     margin: auto;
-    width: 50%;
-    display: block;
-    width: auto;
+    width: 40%;
     margin-left: 10px;
     margin-right: 10px;
     font-size: 1.2em;
-    float:none;
     color: Black;
+    vertical-align: top;
 }
 .noteForm textarea {
+    display: inline-block;
     margin: auto;
     width: 50%;
-    height: 40px;
-    display: block;
     font-size: 1.2em;
-    float:none;
     color: black;
     background-color: white;
+     margin-bottom: 20px;
 }
 
 
 .noteForm input {
+    display: inline-block;
     margin: auto;
+     margin-bottom: 20px;
     width: 50%;
-   display: block;
-    float:none;
 }
 
 .makeNoteSubmit {
@@ -234,14 +232,15 @@ nav:nth-child(1) {
 }
 
 .note {
+    padding-top: 50px;
     background-image: url("/assets/img/notePaper.jpg");
     width: 100%;
     margin: 0 auto;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin-top: 20px;
     background-color: #6daf67;
     min-height:60px;
     overflow: hidden;
+    text-align: left;
 }
 
 .note:hover {
@@ -268,22 +267,33 @@ h3.emptyNote {
     margin-top: 50px;
 }
 
-h3.noteTitle {
-    margin-top: 40px;
-    display: inline-block;
-    text-align: center;
-    width: 70%;
-    font-weight: bold;
-    font-size: 1.5em;
-}
 
-h3.noteDesc, h3.noteDiffLevel, noteDueDate{
-    margin-top: 10px;
+h3.noteTitle, h3.noteDesc, h3.noteDiffLevel, h3.noteDueDate,  h3.noteDueTime{
+    margin-top: 0px;
+   margin-bottom: 10px;
     padding: 0px;
     display: inline-block;
+    width: 100%;
+    font-size: 1.3em;
     text-align: center;
-    width: 70%;
-    font-size: 1.5em;
+}
+h3.noteFinished{
+    vertical-align: top;
+    width:auto;
+    margin: 0px;
+    margin-bottom: 10px
+    padding: 0px;
+    display: inline;
+}
+
+input.noteFinished{
+    margin: 0 !important;
+    margin-left: 15px !important;
+    margin-bottom: 10px !important;
+    padding: 0px !important;
+    display: inline !important;
+     width: 40px !important; 
+    height: 40px !important; 
 }
 
 
@@ -300,7 +310,7 @@ h3.noteDesc, h3.noteDiffLevel, noteDueDate{
     display: block;
     float: left;
     left:90%;
-    margin-top: 40px;
+    margin-top: 0px;
     color: blue;
     vertical-align: top;
     font-size: 1em;
@@ -419,4 +429,25 @@ body{
     display: block;
     background-color: aqua;
     
+}
+
+
+#filters{
+   border: 8px inset #3e8638;
+    width: 40%;
+    background-color: #6daf67;
+    
+    text-align: center;
+    margin: auto;
+    padding: 5px;
+    margin-top: 40px;
+}
+
+#filters *{
+    font-size: 1.3em;
+    margin: 5px;
+}
+
+#filters select{
+    margin-right: 30px;
 }

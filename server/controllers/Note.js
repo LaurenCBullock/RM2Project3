@@ -5,7 +5,7 @@ const Note = models.Note;
 const makeNote = (req, res) => {
   if (!req.body.title || !req.body.desc ||
       !req.body.diffLevel || !req.body.dueDate
-      || !req.body.dueTime) {
+      || !req.body.dueTime || !req.body.noteFinished) {
     return res.status(400).json({ error: 'Title, description, and date are required' });
   }
 
@@ -15,6 +15,7 @@ const makeNote = (req, res) => {
     dueDate: req.body.dueDate,
     dueTime: req.body.dueTime,
     diffLevel: req.body.diffLevel,
+    noteFinished: req.body.noteFinished,
     owner: req.session.account._id,
   };
 
@@ -66,7 +67,71 @@ const deleteNotes = (request) => {
     console.dir(err);
   });
 };
+
+const updateNotes = (request,response) => {
+  console.log(`Updating: _id:${request.body._id}`);
+  Note.NoteModel.findById(request.body._id, (err, doc) => {
+      if (err) {
+        console.log(err);
+      }
+      console.dir(request.body);
+      console.log("title: " + request.body.title);
+      const docu = doc;
+      let c = false;
+      if(request.body.title != ''){
+         docu.title = request.body.title;
+          c = true;
+         };
+      if(request.body.desc != ''){
+         docu.desc = request.body.desc;
+          c = true;
+         };
+      if(request.body.dueDate != ''){
+         docu.dueDate = request.body.dueDate;
+          c = true;
+         };
+      if(request.body.dueTime != ''){
+         docu.dueTime = request.body.dueTime;
+          c = true;
+         };
+      if(request.body.Level != ''){
+         docu.Level = request.body.Level;
+          c = true;
+         };
+      if(request.body.noteFinished != ''){
+         docu.noteFinished = request.body.noteFinished;
+          c = true;
+         };
+      if(c = true){
+          docu.save();
+      };
+      
+      
+    });
+    
+};
+
+const finishedNotesChange = (request, response) => {
+  console.log(request.body._id);
+    
+    
+    Note.NoteModel.findById(request.body._id, (err, doc) => {
+      if (err) {
+        console.log(err);
+      }
+      const docu = doc;
+      docu.noteFinished = !docu.noteFinished;
+        console.log(docu.noteFinished);
+        docu.save();
+        
+      return response.json({ redirect: '/maker' });
+    });
+  
+};
+
 module.exports.makerPage = makerPage;
 module.exports.getNotes = getNotes;
 module.exports.deleteNotes = deleteNotes;
+module.exports.finishedNotes = finishedNotesChange;
+module.exports.updateNotes = updateNotes;
 module.exports.make = makeNote;
